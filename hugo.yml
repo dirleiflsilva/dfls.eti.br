@@ -1,0 +1,79 @@
+baseURL: "https://dfls.eti.br/"
+languageCode: "pt-br"
+defaultContentLanguage: "pt-br"
+title: "Dirlei Friedrich"
+theme: "PaperMod"
+copyright: "Dirlei Friedrich"
+
+enableRobotsTXT: true
+pagination:
+  pagerSize: 10
+
+minify:
+  disableXML: false
+  minifyOutput: true
+
+params:
+  env: production
+  title: "Dirlei Friedrich"
+  description: "Desenvolvedor focado em ERP Protheus, Engenharia de Dados e Backend."
+  keywords:
+    - Protheus
+    - ERP
+    - Engenharia de Dados
+    - PostgreSQL
+    - Backend
+    - APIs
+    - SQL
+  author: "Dirlei Friedrich"
+  DateFormat: "02/01/2006"
+  defaultTheme: light
+  disableThemeToggle: true
+  label:
+    text: "Home"
+    iconSVG: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>'
+
+  ShowReadingTime: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowWordCount: true
+  ShowCodeCopyButtons: true
+  ShowShareButtons: false
+  UseHugoToc: true
+  showtoc: true
+  tocopen: false
+  disableSpecial1stPost: true
+
+  homeInfoParams:
+    Title: "Dirlei Friedrich"
+    Content: "ERP Protheus | Integrações | Dados | Automação"
+
+  socialIcons:
+    - name: linkedin
+      url: "https://www.linkedin.com/in/dirleiflsilva/"
+    - name: github
+      url: "https://github.com/dirleiflsilva"
+    - name: gitlab
+      url: "https://gitlab.com/dirleiflsilva"
+
+  footer:
+    text: "[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)"
+
+menu:
+  main:
+    - identifier: about
+      name: Sobre
+      url: /sobre/
+      weight: 10
+    # - identifier: posts
+    #   name: Posts
+    #   url: /posts/
+    #   weight: 20
+
+taxonomies:
+  tag: tags
+  category: categories
+
+markup:
+  highlight:
+    noClasses: false

@@ -1,0 +1,14 @@
+{{- /* Footer custom content area start */ -}}
+<script>
+  (function () {
+    var logo = document.querySelector(".logo > a");
+    if (logo) {
+      logo.setAttribute("href", "{{ "" | relLangURL }}");
+    }
+  })();
+</script>
+{{- if .IsHome }}
+<script src="{{ "particles/particles.js" | relURL }}"></script>
+<script src="{{ "particles/app.js" | relURL }}"></script>
+{{- end }}
+{{- /* Footer custom content area end */ -}}
