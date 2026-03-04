@@ -1,0 +1,63 @@
+{{- define "main" }}
+<header class="page-header">
+  {{- partial "breadcrumbs.html" . }}
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">{{ .Description }}</div>
+  {{- end }}
+</header>
+
+<section class="contact-card">
+  <p class="contact-intro">
+    Preencha o formulário abaixo. Eu respondo por e-mail.
+  </p>
+  <form id="contact-form" class="contact-form" action="{{ site.Params.formspree.endpoint }}" method="POST">
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true">
+    <input type="hidden" name="_subject" value="Contato Site">
+    <label for="contact-name">Nome</label>
+    <input id="contact-name" name="name" type="text" required>
+
+    <label for="contact-email">E-mail</label>
+    <input id="contact-email" name="email" type="email" required>
+
+    <label for="contact-message">Mensagem</label>
+    <textarea id="contact-message" name="message" rows="6" required></textarea>
+
+    <button type="submit">Enviar mensagem</button>
+    <p id="contact-status" class="contact-status" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<script>
+  (function () {
+    var form = document.getElementById("contact-form");
+    var status = document.getElementById("contact-status");
+    if (!form) return;
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      if (status) status.textContent = "Enviando...";
+
+      var formData = new FormData(form);
+      var endpoint = form.getAttribute("action");
+
+      try {
+        var response = await fetch(endpoint, {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json" }
+        });
+
+        if (response.ok) {
+          window.location.href = "{{ "contact/obrigado/" | relLangURL }}";
+          return;
+        }
+
+        if (status) status.textContent = "Não foi possível enviar agora. Tente novamente.";
+      } catch (error) {
+        if (status) status.textContent = "Falha de conexão. Tente novamente em instantes.";
+      }
+    });
+  })();
+</script>
+{{- end }}

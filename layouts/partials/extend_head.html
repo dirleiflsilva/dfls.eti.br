@@ -1,0 +1,44 @@
+{{- if and .IsPage (findRE "(?m)^```mermaid" .RawContent 1) -}}
+<script type="module">
+  document.addEventListener("DOMContentLoaded", async function () {
+    const blocks = Array.from(
+      document.querySelectorAll("pre > code.language-mermaid, pre > code[data-lang='mermaid']")
+    );
+    if (!blocks.length) return;
+
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "base",
+      flowchart: { useMaxWidth: true, htmlLabels: true },
+      themeVariables: {
+        background: "transparent",
+        fontFamily: "Ubuntu Mono, monospace",
+        primaryColor: "#0f3b25",
+        primaryTextColor: "#ffffff",
+        primaryBorderColor: "#d2f8e4",
+        secondaryColor: "#1a4d33",
+        secondaryTextColor: "#ffffff",
+        secondaryBorderColor: "#d2f8e4",
+        tertiaryColor: "#225f3f",
+        tertiaryTextColor: "#ffffff",
+        tertiaryBorderColor: "#d2f8e4",
+        lineColor: "#d2f8e4",
+        edgeLabelBackground: "#155a38",
+        clusterBkg: "#13492f",
+        clusterBorder: "#d2f8e4"
+      }
+    });
+
+    blocks.forEach(function (codeBlock) {
+      const source = codeBlock.textContent || "";
+      const host = document.createElement("pre");
+      host.className = "mermaid";
+      host.textContent = source;
+      codeBlock.parentElement.replaceWith(host);
+    });
+
+    await mermaid.run({ querySelector: "pre.mermaid" });
+  });
+</script>
+{{- end -}}

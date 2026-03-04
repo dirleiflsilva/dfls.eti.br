@@ -39,6 +39,8 @@ params:
   ShowWordCount: true
   ShowCodeCopyButtons: true
   ShowShareButtons: false
+  ShowRelatedPosts: true
+  comments: true
   UseHugoToc: true
   showtoc: true
   tocopen: false
@@ -60,6 +62,23 @@ params:
   footer:
     text: "[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)"
 
+  giscus:
+    enable: true
+    repo: "dirleiflsilva/dfls.eti.br"
+    repoId: "R_kgDORb-qag"
+    category: "General"
+    categoryId: "DIC_kwDORb-qas4C3so9"
+    mapping: "pathname"
+    strict: "0"
+    reactionsEnabled: "1"
+    emitMetadata: "0"
+    inputPosition: "top"
+    theme: "preferred_color_scheme"
+    lang: "pt"
+
+  formspree:
+    endpoint: "https://formspree.io/f/mdalqqrv"
+
 menu:
   main:
     - identifier: blog
@@ -74,10 +93,10 @@ menu:
       name: Sobre
       url: /about/
       weight: 30
-    # - identifier: contact
-    #   name: Contato
-    #   url: /contact/
-    #   weight: 40
+    - identifier: contact
+      name: Contato
+      url: /contact/
+      weight: 40
 
 taxonomies:
   tag: tags
@@ -86,3 +105,14 @@ taxonomies:
 markup:
   highlight:
     noClasses: false
+
+related:
+  includeNewer: true
+  threshold: 20
+  indices:
+    - name: tags
+      weight: 100
+    - name: categories
+      weight: 80
+    - name: date
+      weight: 10

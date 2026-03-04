@@ -1,2 +1,5 @@
 - id: toc
   translation: "Conteúdos"
+
+- id: related_posts
+  translation: "Posts Relacionados"

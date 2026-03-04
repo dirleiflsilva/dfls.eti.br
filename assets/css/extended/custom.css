@@ -138,6 +138,19 @@ body.list {
   color: #ffffff !important;
 }
 
+.post-single .post-content pre.mermaid {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.post-single .post-content pre.mermaid svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 .post-single .post-content code {
   color: #ffffff;
 }
@@ -162,6 +175,130 @@ body.list {
 
 .post-single .post-tags a:hover {
   background: rgba(0, 0, 0, 0.5);
+}
+
+.related-posts {
+  margin-top: 26px;
+  padding-top: 10px;
+}
+
+.post-cta {
+  margin-top: 24px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.post-cta-title {
+  margin: 0 0 6px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.post-cta-text {
+  margin: 0;
+  color: #ffffff;
+}
+
+.post-cta-text a {
+  color: #ffffff;
+}
+
+.related-posts h2 {
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.related-posts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.related-post-item a {
+  display: block;
+  padding: 10px 12px;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.related-post-item a:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.post-comments {
+  margin-top: 24px;
+}
+
+.post-comments-note {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.28);
+  color: #ffffff;
+}
+
+.contact-card {
+  max-width: 780px;
+  margin: 16px auto 0;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+}
+
+.contact-intro {
+  margin: 0 0 14px;
+}
+
+.contact-form {
+  display: grid;
+  gap: 10px;
+}
+
+.contact-form label {
+  font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  padding: 10px 12px;
+}
+
+.contact-form button {
+  justify-self: start;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  padding: 8px 16px;
+}
+
+.contact-form button:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.contact-status {
+  margin: 4px 0 0;
+  min-height: 20px;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.hp-field {
+  display: none;
 }
 
 .nav {
