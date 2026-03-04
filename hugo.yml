@@ -38,7 +38,7 @@ params:
   ShowBreadCrumbs: true
   ShowWordCount: true
   ShowCodeCopyButtons: true
-  ShowShareButtons: false
+  ShowShareButtons: true
   ShowRelatedPosts: true
   comments: true
   UseHugoToc: true
