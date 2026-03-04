@@ -98,6 +98,72 @@ body.list {
   background: rgba(255, 255, 255, 0.35);
 }
 
+.post-single .post-title,
+.post-single .post-description,
+.post-single .post-meta,
+.post-single .post-meta a,
+.post-single .breadcrumbs,
+.post-single .breadcrumbs a,
+.post-single .post-content,
+.post-single .post-content h1,
+.post-single .post-content h2,
+.post-single .post-content h3,
+.post-single .post-content h4,
+.post-single .post-content p,
+.post-single .post-content li,
+.post-single .post-content strong,
+.post-single .post-content blockquote {
+  color: #ffffff;
+}
+
+.post-single .post-content a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.post-single .post-content hr {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.post-single .toc details {
+  background: rgba(0, 0, 0, 0.22);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.post-single .post-content pre,
+.post-single .post-content .highlight,
+.post-single .post-content .highlight pre,
+.post-single .post-content .chroma {
+  background: rgba(0, 0, 0, 0.28) !important;
+  color: #ffffff !important;
+}
+
+.post-single .post-content code {
+  color: #ffffff;
+}
+
+.post-single .post-content :not(pre) > code {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.post-single .copy-code {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.post-single .post-tags a {
+  color: #ffffff;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.post-single .post-tags a:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
 .nav {
   background: rgba(0, 0, 0, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.28);

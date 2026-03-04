@@ -1,7 +1,7 @@
 +++
 title = "Sobre"
 description = "Quem sou, com o que trabalho e os temas que compartilho no blog."
-url = "/sobre/"
+url = "/about/"
 summary = "Engenheiro de Software com foco em ERP Protheus, integracoes, dados e automacao."
 +++
 

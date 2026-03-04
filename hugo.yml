@@ -47,6 +47,7 @@ params:
   homeInfoParams:
     Title: "Dirlei Friedrich"
     Content: "ERP Protheus | Integrações | Dados | Automação"
+  mainSections: []
 
   socialIcons:
     - name: linkedin
@@ -61,14 +62,22 @@ params:
 
 menu:
   main:
+    - identifier: blog
+      name: Blog
+      url: /posts/
+      weight: 10
+    # - identifier: projects
+    #   name: Projetos
+    #   url: /projects/
+    #   weight: 20
     - identifier: about
       name: Sobre
-      url: /sobre/
-      weight: 10
-    # - identifier: posts
-    #   name: Posts
-    #   url: /posts/
-    #   weight: 20
+      url: /about/
+      weight: 30
+    # - identifier: contact
+    #   name: Contato
+    #   url: /contact/
+    #   weight: 40
 
 taxonomies:
   tag: tags
