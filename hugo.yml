@@ -13,6 +13,15 @@ minify:
   disableXML: false
   minifyOutput: true
 
+services:
+  googleAnalytics:
+    id: "G-ZK13WF1R2S"
+
+privacy:
+  googleAnalytics:
+    disable: false
+    respectDoNotTrack: true
+
 params:
   env: production
   title: "Dirlei Friedrich"
