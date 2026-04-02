@@ -13,6 +13,12 @@ minify:
   disableXML: false
   minifyOutput: true
 
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
 services:
   googleAnalytics:
     id: "G-ZK13WF1R2S"
@@ -94,6 +100,10 @@ menu:
       name: Blog
       url: /posts/
       weight: 10
+    - identifier: search
+      name: Busca
+      url: /search/
+      weight: 20
     # - identifier: projects
     #   name: Projetos
     #   url: /projects/

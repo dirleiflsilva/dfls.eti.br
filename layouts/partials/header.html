@@ -2,6 +2,7 @@
     <nav class="nav">
         <div class="logo">
             {{- $label_text := (site.Params.label.text | default site.Title) }}
+            {{- $search_page := site.GetPage "/search" }}
             {{- if site.Title }}
             <a href="{{ "" | relLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)">
                 {{- if site.Params.label.icon }}
@@ -32,6 +33,21 @@
             </a>
             {{- end }}
             <div class="logo-switches">
+                {{- with $search_page }}
+                <a
+                    class="header-search-link{{ if eq $.RelPermalink .RelPermalink }} active{{ end }}"
+                    href="{{ .RelPermalink }}"
+                    accesskey="/"
+                    title="{{ .Title }} (Alt + /)"
+                    aria-label="{{ .Title }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </a>
+                {{- end }}
                 {{- if (not site.Params.disableThemeToggle) }}
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -83,6 +99,7 @@
         {{- $currentPage := . }}
         <ul id="menu">
             {{- range site.Menus.main }}
+            {{- if ne .Identifier "search" }}
             {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | relLangURL }}
             {{- $page_url := $currentPage.RelPermalink | relLangURL }}
             {{- $is_search := eq (site.GetPage .KeyName).Layout `search` }}
@@ -104,6 +121,7 @@
                     {{- end }}
                 </a>
             </li>
+            {{- end }}
             {{- end }}
         </ul>
     </nav>
