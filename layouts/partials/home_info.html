@@ -1,14 +1,16 @@
 {{- with site.Params.homeInfoParams }}
-<div id="particles-js" aria-hidden="true"></div>
-<article class="first-entry home-info home-hero">
-  <header class="entry-header up-in">
-    <h1 class="hero-title">{{ .Title | markdownify }}</h1>
-  </header>
-  <div class="entry-content up-in">
-    <p class="hero-description">{{ .Content | markdownify }}</p>
-  </div>
-  <footer class="entry-footer up-in">
-    {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
-  </footer>
-</article>
+<section class="home-hero-shell">
+  <div id="particles-js" aria-hidden="true"></div>
+  <article class="first-entry home-info home-hero">
+    <header class="entry-header up-in">
+      <h1 class="hero-title">{{ .Title | markdownify }}</h1>
+    </header>
+    <div class="entry-content up-in">
+      <p class="hero-description">{{ .Content | markdownify }}</p>
+    </div>
+    <footer class="entry-footer up-in">
+      {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+  </article>
+</section>
 {{- end -}}
