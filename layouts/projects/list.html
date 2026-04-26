@@ -1,0 +1,89 @@
+{{- define "main" }}
+
+<header class="page-header">
+  {{- partial "breadcrumbs.html" . }}
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">
+    {{ .Description | markdownify }}
+  </div>
+  {{- end }}
+</header>
+
+{{- if .Content }}
+<div class="post-content">
+  {{- if not (.Param "disableAnchoredHeadings") }}
+  {{- partial "anchored_headings.html" .Content -}}
+  {{- else }}{{ .Content }}{{ end }}
+</div>
+{{- end }}
+
+{{- $paginator := .Paginate .RegularPages }}
+{{- if gt (len $paginator.Pages) 0 }}
+<section class="projects-grid" aria-label="Lista de projetos">
+  {{- range $paginator.Pages }}
+  <article class="project-card">
+    <header class="project-card-header">
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      {{- with .Params.project_status }}
+      <span class="project-status status-{{ . | urlize }}">{{ . }}</span>
+      {{- end }}
+    </header>
+
+    {{- $desc := .Description | default .Summary }}
+    {{- if $desc }}
+    <p class="project-card-summary">{{ $desc | plainify | htmlUnescape }}</p>
+    {{- end }}
+
+    <ul class="project-card-meta">
+      {{- with .Params.repo_url }}
+      <li><a href="{{ . }}" target="_blank" rel="noopener">Repositório</a></li>
+      {{- end }}
+      {{- with .Params.post_links }}
+        {{- range . }}
+      <li><a href="{{ .url | relLangURL }}">{{ .label | default "Post técnico" }}</a></li>
+        {{- end }}
+      {{- else }}
+        {{- with .Params.post_url }}
+      <li><a href="{{ . | relLangURL }}">Post técnico</a></li>
+        {{- end }}
+      {{- end }}
+      <li><a href="{{ .RelPermalink }}">Detalhes</a></li>
+    </ul>
+
+    {{- with .Params.stack }}
+    <div class="project-chips" aria-label="Stack">
+      {{- range . }}
+      <span>{{ . }}</span>
+      {{- end }}
+    </div>
+    {{- end }}
+
+    {{- with .Params.highlights }}
+    <ul class="project-highlights">
+      {{- range . }}
+      <li>{{ . }}</li>
+      {{- end }}
+    </ul>
+    {{- end }}
+  </article>
+  {{- end }}
+</section>
+{{- else }}
+<p>Nenhum projeto publicado ainda.</p>
+{{- end }}
+
+{{- if gt $paginator.TotalPages 1 }}
+<footer class="page-footer">
+  <nav class="pagination">
+    {{- if $paginator.HasPrev }}
+    <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">«&nbsp;{{ i18n "prev_page" }}</a>
+    {{- end }}
+    {{- if $paginator.HasNext }}
+    <a class="next" href="{{ $paginator.Next.URL | absURL }}">{{ i18n "next_page" }}&nbsp;»</a>
+    {{- end }}
+  </nav>
+</footer>
+{{- end }}
+
+{{- end }}

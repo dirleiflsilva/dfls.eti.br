@@ -275,6 +275,117 @@ body.home #theme-toggle {
   color: var(--hero-ink);
 }
 
+.projects-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.project-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--entry);
+}
+
+.project-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.project-card-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.project-card-header h2 a {
+  color: var(--primary);
+}
+
+.project-card-header h2 a:hover {
+  color: var(--brand-accent);
+}
+
+.project-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  line-height: 1;
+  border: 1px solid var(--border);
+  background: var(--theme);
+  color: var(--secondary);
+}
+
+.status-active {
+  border-color: color-mix(in srgb, var(--brand-accent) 55%, var(--border));
+  color: var(--brand-accent);
+}
+
+.project-card-summary {
+  margin: 10px 0;
+  color: var(--content);
+}
+
+.project-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+}
+
+.project-card-meta a {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.project-card-meta a:hover {
+  border-color: var(--brand-accent);
+}
+
+.project-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.project-chips span {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  color: var(--secondary);
+  font-size: 0.8rem;
+}
+
+.project-highlights {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--content);
+}
+
+@media (max-width: 640px) {
+  .project-card {
+    padding: 14px;
+  }
+
+  .project-card-meta {
+    gap: 6px;
+  }
+}
+
 :root[data-theme="light"] body.home .logo a,
 :root[data-theme="light"] body.home #menu a,
 :root[data-theme="light"] body.home .footer,

@@ -63,7 +63,7 @@ params:
 
   homeInfoParams:
     Title: "Dirlei Friedrich"
-    Content: "ERP Protheus | Integrações & APIs | Engenharia Dados | PostgreSQL & SQL"
+    Content: "PostgreSQL | Data Platform Engineering | Reliability | Automation | ERP Protheus"
   mainSections: []
 
   socialIcons:
@@ -100,14 +100,14 @@ menu:
       name: Blog
       url: /posts/
       weight: 10
+    - identifier: projects
+      name: Projetos/Labs
+      url: /projects/
+      weight: 20
     - identifier: search
       name: Busca
       url: /search/
-      weight: 20
-    # - identifier: projects
-    #   name: Projetos
-    #   url: /projects/
-    #   weight: 20
+      weight: 25
     - identifier: about
       name: Sobre
       url: /about/
