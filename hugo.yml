@@ -31,15 +31,18 @@ privacy:
 params:
   env: production
   title: "Dirlei Friedrich"
-  description: "Desenvolvedor focado em ERP Protheus, Engenharia de Dados e Backend."
+  description: "Engenheiro de Software com sólida experiência em ERP Protheus e foco em PostgreSQL, automação e confiabilidade."
   keywords:
-    - Protheus
-    - ERP
-    - Engenharia de Dados
     - PostgreSQL
-    - Backend
-    - APIs
+    - Database Reliability
+    - DBRE
+    - DevOps
+    - Automation
     - SQL
+    - Open Source
+    - ERP Protheus
+    - APIs
+    - Linux
   author: "Dirlei Friedrich"
   DateFormat: "02/01/2006"
   defaultTheme: light
@@ -63,7 +66,7 @@ params:
 
   homeInfoParams:
     Title: "Dirlei Friedrich"
-    Content: "PostgreSQL | Data Platform Engineering | Reliability | Automation | ERP Protheus"
+    Content: "PostgreSQL | Database Reliability | Automation | DevOps"
   mainSections: []
 
   socialIcons:
