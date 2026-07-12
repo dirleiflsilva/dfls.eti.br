@@ -126,6 +126,8 @@ Isso evita carregar a biblioteca em páginas que não usam diagramas.
 
 A home usa `homeInfoParams` do PaperMod e scripts de partículas carregados apenas na página inicial por `layouts/partials/extend_footer.html`.
 
+`params.mainSections` permanece vazio de forma intencional. Isso mantém a home como apresentação profissional, sem duplicar nela a listagem disponível em `/posts/`. A seção Blog possui metadados próprios em `content/posts/_index.md` e também serve como base para um futuro arquivo cronológico exclusivo de posts.
+
 O menu principal aponta para:
 
 - Blog
