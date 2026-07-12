@@ -16,7 +16,7 @@ stack:
 highlights:
   - "Ambiente reproduzível"
   - "Automação de validações"
-categories: ["Projetos/Labs"]
+categories: ["Projetos & Labs"]
 ---
 
 ## Contexto

@@ -13,7 +13,7 @@ tags:
   - data-engineering
   - devops
 categories:
-  - Projetos/Labs
+  - Projetos & Labs
 description: "Construindo um ambiente PostgreSQL reproduzível e confiável com Docker, com foco em boas práticas próximas de produção."
 ---
 

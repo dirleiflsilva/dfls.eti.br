@@ -30,7 +30,6 @@ go.work.sum
 # Editor/IDE
 # .idea/
 .codex
-<<<<<<< HEAD
 .vscode/
 
 # Hugo generated output
@@ -47,6 +46,3 @@ coverage.out
 # Editor/OS
 .DS_Store
 Thumbs.db
-=======
-# .vscode/
->>>>>>> origin/main

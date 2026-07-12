@@ -20,7 +20,7 @@ highlights:
   - "Persistência e healthcheck para ambiente confiável"
   - "Roadmap para backup, observabilidade e alta disponibilidade"
 tags: ["postgresql", "dbre", "reliability", "labs", "devops"]
-categories: ["Projetos/Labs"]
+categories: ["Projetos & Labs"]
 ---
 
 ## Objetivo

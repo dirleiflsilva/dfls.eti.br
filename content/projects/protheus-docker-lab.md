@@ -21,7 +21,7 @@ highlights:
   - "DBAccess e ODBC gerados por script para evitar configuração manual frágil"
   - "Validação operacional antes da subida do laboratório"
 tags: ["protheus", "docker", "devops", "postgresql", "labs"]
-categories: ["Projetos/Labs"]
+categories: ["Projetos & Labs"]
 ---
 
 ## Objetivo
