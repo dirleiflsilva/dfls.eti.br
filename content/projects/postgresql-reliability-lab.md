@@ -9,6 +9,8 @@ repo_url: "https://github.com/dirleiflsilva/postgresql-reliability-lab"
 post_links:
   - label: "Post técnico (Lab 01)"
     url: "/posts/postgresql-reliability-lab-lab-01-ambiente-confiavel-com-docker/"
+  - label: "Post técnico (Lab 02)"
+    url: "/posts/postgresql-reliability-lab-lab-02-inicializacao-de-banco-de-dados/"
 stack:
   - PostgreSQL
   - Docker
@@ -16,9 +18,9 @@ stack:
   - Bash
   - SQL
 highlights:
-  - "Base reproduzível com docker-compose e init script"
-  - "Persistência e healthcheck para ambiente confiável"
-  - "Roadmap para backup, observabilidade e alta disponibilidade"
+  - "Base reproduzível com Docker Compose, persistência e healthcheck"
+  - "Roles, schemas e privilégios separados por responsabilidade"
+  - "Modelo de e-commerce com carga e validação automatizadas"
 tags: ["postgresql", "dbre", "reliability", "labs", "devops"]
 categories: ["Projetos & Labs"]
 ---
@@ -27,21 +29,24 @@ categories: ["Projetos & Labs"]
 
 Criar e evoluir um laboratório prático de confiabilidade para PostgreSQL, com foco em operação, padronização e testes de cenários reais.
 
-O post vinculado representa o **Lab 01 (Foundation)** do roadmap. Os próximos labs vão aprofundar práticas de backup, observabilidade, resiliência e operação avançada.
+Os posts vinculados apresentam o **Lab 01 (Foundation)** e o **Lab 02 (Database Initialization)**. Juntos, eles entregam uma instância reproduzível e uma base realista para os próximos cenários de confiabilidade.
 
 ## Links
 
 - Repositório: [postgresql-reliability-lab](https://github.com/dirleiflsilva/postgresql-reliability-lab)
 - Deep dive técnico (Lab 01): [PostgreSQL Reliability Lab - Lab 01: Ambiente confiável com Docker](/posts/postgresql-reliability-lab-lab-01-ambiente-confiavel-com-docker/)
+- Deep dive técnico (Lab 02): [PostgreSQL Reliability Lab - Lab 02: Inicialização de banco de dados](/posts/postgresql-reliability-lab-lab-02-inicializacao-de-banco-de-dados/)
 
 ## Estado atual
 
 - Foundation pronta com Docker
-- Inicialização automatizada com SQL
-- Validação operacional básica
+- Inicialização ordenada de roles, extensões, schemas e tabelas
+- Modelo de e-commerce com massa de dados reproduzível
+- Validação automatizada do estado operacional e dos dados
 
 ## Próximas fases
 
-- Lab 02: estratégias de backup e restore
-- Lab 03: observabilidade de saúde e performance
-- Lab 04: ensaios de resiliência e cenários de falha
+- Lab 03: backup lógico, backup físico, WAL archiving e recuperação point-in-time
+- Lab 04: streaming replication com primary e replica
+- Lab 05: alta disponibilidade e failover automático
+- Labs seguintes: observabilidade, performance e pipeline de dados
