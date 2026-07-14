@@ -5,7 +5,7 @@
 **Última revisão:** 14/07/2026
 
 **Escopo:** configuração Hugo, tema PaperMod, layouts/partials locais, conteúdo versionado, assets estáticos e HTML produzido por um build limpo.  
-**Método:** inspeção estática do repositório, revisão das orientações oficiais atuais do Google, builds limpos de produção e desenvolvimento com Hugo 0.152.2, análise do HTML resultante e validação de 709 referências internas. A Fase 3 adicionou a fundação do Consent Mode v2 e adequou o carregamento do GA4, sem implementar CMP, interface de consentimento ou publicidade.
+**Método:** inspeção estática do repositório, revisão das orientações oficiais atuais do Google, builds limpos de produção e desenvolvimento com Hugo 0.152.2, análise do HTML resultante e validação de 709 referências internas. Após a Fase 3, a conta AdSense foi conectada ao domínio exclusivamente pela meta tag oficial, sem implementar CMP, interface de consentimento ou publicidade.
 
 ## Resumo Executivo
 
@@ -13,7 +13,7 @@
 
 O site tem boa base técnica e editorial: domínio e `baseURL` coerentes, HTTPS como URL canônica, navegação clara, páginas Sobre, Contato e Política de Privacidade, 11 artigos publicados com conteúdo substancial, dois projetos, seção Blog formalizada, metadados essenciais, sitemap e robots.txt. O build com Hugo 0.152.2 terminou sem erros, gerou 109 páginas e uma página adicional de paginação, e a verificação local não encontrou links internos quebrados.
 
-Ainda não é recomendável solicitar o AdSense. A Política de Privacidade, a transparência e a fundação técnica do Consent Mode v2 foram implementadas. O GA4 agora inicia somente em produção, depois de quatro sinais padrão definidos como `denied`, e DNT impede o loader. Ainda falta configurar e publicar uma CMP certificada, receber updates reais de consentimento e validar o fluxo completo antes da solicitação.
+A conta AdSense foi criada e o domínio `dfls.eti.br` está sendo conectado pelo Publisher ID configurado na meta tag oficial de produção. Isso não ativa anúncios: a revisão/aprovação do site continua pendente e nenhum script ou unidade de publicidade foi adicionado. A Política de Privacidade, a transparência e a fundação técnica do Consent Mode v2 foram implementadas, mas ainda falta configurar e publicar uma CMP certificada, receber updates reais de consentimento e validar o fluxo completo.
 
 ## Checklist
 
@@ -30,6 +30,7 @@ Ainda não é recomendável solicitar o AdSense. A Política de Privacidade, a t
 | ✅ OK | Ordem das tags | `dataLayer` → `gtag()` → `consent default` → loader `gtag.js` → configuração GA4, confirmados no HTML de produção | Revalidar após integrar a CMP | Média |
 | ✅ OK | DNT | Consent default permanece negado; DNT `1` ou `yes` impede loader e configuração GA4 sem conceder consentimento | Manter conservador | Baixa |
 | ✅ OK | Configuração por ambiente | `params.env: production` removido; partial local depende de `hugo.IsProduction`; build development não contém Google tag ou Measurement ID | Manter deploy explícito e testar regressões | Baixa |
+| ⚠️ Parcial | Conexão da conta AdSense | Conta criada; `dfls.eti.br` conectado em produção via meta `google-adsense-account`, usando o Publisher ID centralizado; sem código de anúncios | Publicar e aguardar a validação/revisão no painel Google | Alta |
 | ✅ OK | Conteúdo publicado | 11 posts versionados e publicados, aproximadamente 542–1.723 palavras cada; nenhum post vazio ou de teste detectado | Manter consistência editorial | Baixa |
 | ✅ OK | Índice do Blog | `content/posts/_index.md` define título, descrição, resumo e URL de `/posts/`; paginação passou a ser gerada após o 11º post | Manter como índice principal; avaliar arquivo cronológico quando o volume justificar | Baixa |
 | ⚠️ Parcial | Projetos | Dois projetos publicados; um deles tem cerca de 112 palavras, mas apresenta estado, stack e repositório | Expandir evidências/resultados quando houver material real | Baixa |
@@ -89,6 +90,7 @@ A página gera título, descrição, canonical `https://dfls.eti.br/privacy/` e 
 - Google Fonts é importado globalmente por `assets/css/extended/custom.css`.
 - Mermaid é importado de jsDelivr apenas em páginas cujo Markdown contém bloco Mermaid.
 - Não há Google Tag Manager nem script do AdSense.
+- A meta tag `google-adsense-account` conecta a conta em produção, mas não carrega publicidade nem participa do fluxo de consentimento.
 - Não há banner, CMP publicada, central de preferências ou update de consentimento após escolha real.
 - A Política de Privacidade agora descreve esse estado atual e diferencia armazenamento funcional, Analytics e publicidade futura.
 
@@ -108,6 +110,12 @@ Como solução simples e de baixo custo, avaliar primeiro o recurso **Privacy & 
 
 ## 4. Preparação técnica para o AdSense
 
+### Conexão da conta
+
+O Publisher ID está centralizado em `params.adsense.publisherId`. Em produção, `layouts/partials/extend_head.html` chama `layouts/partials/adsense/account.html`, que gera exclusivamente a meta tag oficial `google-adsense-account` quando o parâmetro existe e não está vazio. A tag não aparece em development, não carrega `adsbygoogle.js`, não cria requisições ou unidades de anúncio e não altera Consent Mode, GA4 ou DNT.
+
+A conta foi criada e o domínio `dfls.eti.br` está sendo conectado. A confirmação da conexão e a revisão/aprovação do site continuam pendentes no painel Google AdSense.
+
 ### Melhor ponto na arquitetura atual
 
 O ponto de extensão mais estável é `layouts/partials/extend_head.html`, que o `head.html` do PaperMod já chama. Não é necessário copiar ou editar `themes/PaperMod/layouts/partials/head.html`, o que reduziria a facilidade de atualizar o submódulo do tema.
@@ -126,11 +134,12 @@ layouts/
     ad.html                # opcional; uso editorial explícito
 ```
 
-Exemplo curto de configuração, ainda não implementado:
+Estrutura futura para exibição de anúncios, ainda não implementada além do `publisherId`:
 
 ```yaml
 params:
   adsense:
+    publisherId: "ca-pub-..."
     enabled: false
     client: ""
     autoAds: false
@@ -246,7 +255,7 @@ Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado for
 
 ## Arquitetura recomendada para futura integração
 
-1. Criar configuração `params.adsense` com `enabled`, `client` e `autoAds`, desativada por padrão.
+1. Expandir a configuração atual `params.adsense`, no futuro, com `enabled`, `client` e `autoAds`, mantendo a exibição desativada por padrão.
 2. Separar configuração de produção, ou passar a ativação no workflow de deploy; nunca ativar com `hugo server`.
 3. Criar `layouts/partials/adsense/head.html` e chamá-lo por `layouts/partials/extend_head.html` somente quando produção + habilitado + client válido.
 4. Integrar primeiro a CMP e os sinais de Consent Mode; validar a ordem de carregamento antes de ativar anúncios.
@@ -259,6 +268,6 @@ Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado for
 1. Configurar a CMP no Google AdSense Privacy & messaging, habilitar os sinais de Consent Mode e publicar a mensagem aplicável.
 2. Validar no Tag Assistant default, aceite, recusa, alteração, revogação, DNT e ausência de duplicidade.
 3. Revisar a Política de Privacidade para refletir a CMP efetivamente publicada e disponibilizar preferências/revogação.
-4. Implementar a configuração e os partials de AdSense, ainda com `enabled: false`.
+4. Implementar a configuração e os partials de exibição do AdSense, ainda com `enabled: false`; a meta de conexão já está separada desse fluxo.
 5. Validar em ambiente de produção controlado que não há script/ad request em páginas excluídas nem em desenvolvimento.
 6. Ativar inicialmente uma única unidade responsiva ao final dos posts e acompanhar experiência e métricas antes de expandir.

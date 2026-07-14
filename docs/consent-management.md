@@ -18,6 +18,7 @@ O código está preparado da seguinte forma:
 - o GA4 usa o Measurement ID de `services.googleAnalytics.id`;
 - existe somente um fluxo de carregamento do GA4;
 - DNT continua sendo respeitado de forma conservadora;
+- a conta AdSense é identificada em produção por uma meta tag de conexão;
 - Google AdSense ainda não está ativo;
 - nenhuma CMP ou mensagem de consentimento foi publicada pelo código.
 
@@ -82,6 +83,18 @@ A função global `gtag()` e o `dataLayer` ficam disponíveis para a integraçã
 
 O projeto não executa esse update por conta própria e não persiste escolhas em cookies, `localStorage` ou `sessionStorage`. Não devem ser adicionados botões que concedam consentimento diretamente sem uma CMP adequada.
 
+## Conexão da conta AdSense
+
+Em produção, `layouts/partials/adsense/account.html` gera a meta tag oficial `google-adsense-account` com o Publisher ID centralizado em `params.adsense.publisherId`. Essa tag serve somente para conectar e verificar o domínio `dfls.eti.br` na conta Google AdSense.
+
+A meta tag:
+
+- não carrega `adsbygoogle.js` nem faz requisições de anúncios;
+- não exibe publicidade ou ativa Auto Ads;
+- não altera os quatro estados de consentimento;
+- não executa `consent update`;
+- não substitui a configuração e publicação da CMP.
+
 ## DNT — Do Not Track
 
 A configuração existente mantém `privacy.googleAnalytics.respectDoNotTrack: true`.
@@ -103,18 +116,18 @@ Comportamento esperado:
 
 | Ambiente | Consent Mode | GA4 real | Metadados de produção |
 |---|---|---|---|
-| `hugo` / deploy atual | Ativo, default negado | Ativo quando DNT não está habilitado | Ativos |
-| `hugo -e development` | Ausente | Ausente | Desativados pelo PaperMod |
-| `hugo server -e development` | Ausente | Ausente | Desativados pelo PaperMod |
+| `hugo` / deploy atual | Ativo, default negado | Ativo quando DNT não está habilitado | Ativos; meta de conexão AdSense presente |
+| `hugo -e development` | Ausente | Ausente | Desativados pelo PaperMod; meta AdSense ausente |
+| `hugo server -e development` | Ausente | Ausente | Desativados pelo PaperMod; meta AdSense ausente |
 
 ## Dependência externa: Google CMP
 
-A integração final depende de configuração no painel do Google AdSense. O repositório ainda não possui Publisher ID, `ca-pub`, ID de mensagem ou configuração de Privacy & messaging, e nenhum desses valores deve ser inventado.
+A conta Google AdSense foi criada e o Publisher ID foi configurado no repositório para conectar o domínio por meta tag. A revisão/aprovação do site, o ID de mensagem e a configuração de Privacy & messaging continuam dependentes do painel Google; nenhum identificador adicional deve ser inventado.
 
 Fluxo previsto no painel do Google:
 
-1. criar ou configurar a conta do Google AdSense;
-2. conectar e validar o domínio `dfls.eti.br`;
+1. concluir a conexão e validação do domínio `dfls.eti.br` pela meta tag publicada;
+2. acompanhar a revisão/aprovação do site no Google AdSense;
 3. acessar **Privacy & messaging**;
 4. configurar a mensagem de regulamentações europeias quando aplicável;
 5. habilitar na CMP do Google os sinais de Consent Mode para publicidade e Analytics;

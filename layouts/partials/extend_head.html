@@ -1,3 +1,7 @@
+{{- if hugo.IsProduction -}}
+  {{- partial "adsense/account.html" . -}}
+{{- end -}}
+
 <script>
   (function () {
     var migrationKey = "pref-theme-default-light-v1";

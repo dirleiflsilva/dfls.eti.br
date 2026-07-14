@@ -29,6 +29,8 @@ privacy:
     respectDoNotTrack: true
 
 params:
+  adsense:
+    publisherId: "ca-pub-9373917420304685"
   title: "Dirlei Friedrich"
   description: "Engenheiro de Software com sólida experiência em ERP Protheus e foco em PostgreSQL, automação e confiabilidade."
   keywords:
