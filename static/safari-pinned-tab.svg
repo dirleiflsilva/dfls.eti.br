@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M3 10.5 12 3l9 7.5"/>
-  <path d="M5 9.5V21h14V9.5"/>
-  <path d="M10 21v-6h4v6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>DF_</title>
+  <path d="M72 128h112c75 0 128 50 128 128s-53 128-128 128H72V128zm64 56v144h45c56 0 91-25 91-72s-35-72-91-72h-45z"/>
+  <path d="M328 128h136v56h-72v47h64v56h-64v97h-64V128z"/>
+  <path d="M400 344h72v40h-72z"/>
 </svg>
