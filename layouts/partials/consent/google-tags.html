@@ -1,0 +1,19 @@
+{{- $measurementID := .measurementID -}}
+{{- $respectDoNotTrack := .respectDoNotTrack -}}
+<script>
+  (function () {
+    var respectDoNotTrack = {{ $respectDoNotTrack }};
+    var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    var doNotTrackEnabled = dnt === "1" || dnt === "yes";
+
+    if (respectDoNotTrack && doNotTrackEnabled) return;
+
+    var googleTag = document.createElement("script");
+    googleTag.async = true;
+    googleTag.src = "https://www.googletagmanager.com/gtag/js?id={{ $measurementID }}";
+    document.head.appendChild(googleTag);
+
+    gtag("js", new Date());
+    gtag("config", "{{ $measurementID }}");
+  })();
+</script>

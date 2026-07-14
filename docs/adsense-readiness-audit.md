@@ -5,7 +5,7 @@
 **Última revisão:** 14/07/2026
 
 **Escopo:** configuração Hugo, tema PaperMod, layouts/partials locais, conteúdo versionado, assets estáticos e HTML produzido por um build limpo.  
-**Método:** inspeção estática do repositório, revisão das orientações oficiais atuais do Google, build limpo com Hugo 0.152.2, análise do HTML resultante e validação de 709 referências internas. A Fase 2 adicionou somente a página institucional e seu link no rodapé; não alterou Analytics nem implementou consentimento ou publicidade.
+**Método:** inspeção estática do repositório, revisão das orientações oficiais atuais do Google, builds limpos de produção e desenvolvimento com Hugo 0.152.2, análise do HTML resultante e validação de 709 referências internas. A Fase 3 adicionou a fundação do Consent Mode v2 e adequou o carregamento do GA4, sem implementar CMP, interface de consentimento ou publicidade.
 
 ## Resumo Executivo
 
@@ -13,7 +13,7 @@
 
 O site tem boa base técnica e editorial: domínio e `baseURL` coerentes, HTTPS como URL canônica, navegação clara, páginas Sobre, Contato e Política de Privacidade, 11 artigos publicados com conteúdo substancial, dois projetos, seção Blog formalizada, metadados essenciais, sitemap e robots.txt. O build com Hugo 0.152.2 terminou sem erros, gerou 109 páginas e uma página adicional de paginação, e a verificação local não encontrou links internos quebrados.
 
-Ainda não é recomendável solicitar o AdSense. A Política de Privacidade e a transparência sobre cookies, terceiros e publicidade futura foram implementadas, mas o Google Analytics 4 continua sendo carregado globalmente sem mecanismo de consentimento. Antes da solicitação, é preciso definir uma solução de consentimento compatível com a audiência atendida e fazer com que Analytics e, futuramente, AdSense respeitem essa escolha.
+Ainda não é recomendável solicitar o AdSense. A Política de Privacidade, a transparência e a fundação técnica do Consent Mode v2 foram implementadas. O GA4 agora inicia somente em produção, depois de quatro sinais padrão definidos como `denied`, e DNT impede o loader. Ainda falta configurar e publicar uma CMP certificada, receber updates reais de consentimento e validar o fluxo completo antes da solicitação.
 
 ## Checklist
 
@@ -24,11 +24,12 @@ Ainda não é recomendável solicitar o AdSense. A Política de Privacidade e a 
 | ✅ OK | Política de Privacidade | `content/privacy/_index.md`, URL `/privacy/`; página pública, indexável e com metadados próprios | Revisar quando serviços ou requisitos mudarem | Baixa |
 | ✅ OK | Política de Cookies | Seção equivalente incluída na Política de Privacidade, cobrindo armazenamento funcional, Analytics e publicidade futura | Atualizar junto da implementação de consentimento | Média |
 | ✅ OK | Transparência sobre terceiros | A política documenta GA4, Formspree, Giscus/GitHub, Google Fonts e jsDelivr/Mermaid com links oficiais essenciais | Manter alinhada ao código | Média |
-| ⚠️ Parcial | Consentimento atual | Não existe banner/CMP; GA4 é carregado globalmente | Implantar CMP/consentimento e impedir Analytics antes da escolha quando exigido | Alta |
+| ⚠️ Parcial | Consentimento atual | Consent Mode v2 começa com quatro estados negados, mas não existe CMP/mensagem publicada nem update após escolha real | Configurar a CMP certificada e validar aceite, recusa e revogação | Alta |
 | ✅ OK | Cookies/armazenamento próprio | A política classifica e descreve `pref-theme`, `pref-theme-default-light-v1` e `menu-scroll-position` como armazenamento funcional | Manter alinhado às chaves usadas pelo tema | Baixa |
-| ✅ OK | Analytics identificável | GA4 está configurado em `services.googleAnalytics.id` (`G-ZK13WF1R2S`) e respeita DNT | Integrá-lo ao consentimento; DNT sozinho não substitui consentimento | Alta |
-| ✅ OK | Ponto global de integração | `layouts/partials/extend_head.html` é chamado pelo `head.html` do tema em todas as páginas | Criar partial dedicado e chamá-lo condicionalmente pelo `extend_head.html` | Média |
-| ⚠️ Parcial | Configuração por ambiente | `params.env: production` força recursos de produção mesmo em build local comum | Condicionar AdSense a `hugo.IsProduction` e a um parâmetro explícito; usar `hugo server -e development` | Alta |
+| ✅ OK | Carregamento do GA4 | Override local usa `services.googleAnalytics.id`; há um único loader e um único `gtag("config")`, ambos posteriores ao default de consentimento | Manter o fluxo único | Baixa |
+| ✅ OK | Ordem das tags | `dataLayer` → `gtag()` → `consent default` → loader `gtag.js` → configuração GA4, confirmados no HTML de produção | Revalidar após integrar a CMP | Média |
+| ✅ OK | DNT | Consent default permanece negado; DNT `1` ou `yes` impede loader e configuração GA4 sem conceder consentimento | Manter conservador | Baixa |
+| ✅ OK | Configuração por ambiente | `params.env: production` removido; partial local depende de `hugo.IsProduction`; build development não contém Google tag ou Measurement ID | Manter deploy explícito e testar regressões | Baixa |
 | ✅ OK | Conteúdo publicado | 11 posts versionados e publicados, aproximadamente 542–1.723 palavras cada; nenhum post vazio ou de teste detectado | Manter consistência editorial | Baixa |
 | ✅ OK | Índice do Blog | `content/posts/_index.md` define título, descrição, resumo e URL de `/posts/`; paginação passou a ser gerada após o 11º post | Manter como índice principal; avaliar arquivo cronológico quando o volume justificar | Baixa |
 | ⚠️ Parcial | Projetos | Dois projetos publicados; um deles tem cerca de 112 palavras, mas apresenta estado, stack e repositório | Expandir evidências/resultados quando houver material real | Baixa |
@@ -44,8 +45,8 @@ Ainda não é recomendável solicitar o AdSense. A Política de Privacidade e a 
 | ✅ OK | `noindex` da página Obrigado | `content/contact/obrigado.md` define `robotsNoIndex = true`; HTML gera `noindex, nofollow` | Manter a página acessível, sem bloqueá-la no robots.txt | Baixa |
 | ✅ OK | Link institucional no rodapé | `params.footer.text` inclui `/privacy/`; o link aparece nas páginas principais e no 404 sem override do tema | Manter persistente | Baixa |
 | ✅ OK | Peso de imagens | Maior imagem estática tem cerca de 101 KB; nenhuma imagem excessivamente pesada foi detectada | Manter compressão proporcional | Baixa |
-| ⚠️ Parcial | Scripts e recursos externos | GA4 é global; partículas (47 KB) só na home; Giscus só em posts; Mermaid/jsDelivr só em páginas com Mermaid; Google Fonts é global | Não adicionar AdSense fora de páginas elegíveis; considerar fonte local apenas se métricas justificarem | Média |
-| ℹ️ Opcional | Consent Mode | Não existe | Usar Consent Mode com a CMP para propagar escolhas ao GA4 e AdSense | Média |
+| ⚠️ Parcial | Scripts e recursos externos | GA4 é exclusivo de produção e consent-aware com default negado; partículas, Giscus, Mermaid e Google Fonts mantêm o comportamento anterior | Integrar terceiros às escolhas conforme a estratégia da CMP exigir | Média |
+| ⚠️ Parcial | Consent Mode v2 | Fundação local concluída para `analytics_storage`, `ad_storage`, `ad_user_data` e `ad_personalization`; updates dependem da CMP | Publicar CMP e validar updates reais no Tag Assistant | Alta |
 | ℹ️ Opcional | Anúncio no meio do artigo | Não existe | Considerar somente em artigos longos, com regra explícita no front matter | Baixa |
 
 ## 1. Estrutura básica do site
@@ -79,14 +80,16 @@ A página gera título, descrição, canonical `https://dfls.eti.br/privacy/` e 
 
 ### Estado atual
 
-- O Google Analytics 4 é inserido pelo partial `google_analytics.html` do PaperMod, acionado em `themes/PaperMod/layouts/partials/head.html`. O download de `googletagmanager.com/gtag/js` ocorre antes de qualquer escolha, exceto quando o navegador envia DNT.
+- O PaperMod continua acionando `google_analytics.html`, mas um override local agora inicializa Consent Mode e GA4 sem editar o tema.
+- Em produção, `layouts/partials/consent/default.html` cria `dataLayer`/`gtag()` e define os quatro sinais como `denied` antes da tag Google.
+- `layouts/partials/consent/google-tags.html` preserva DNT: com DNT ativo, não carrega `gtag.js` nem configura GA4; sem DNT, carrega uma única tag sob os estados negados.
 - O tema usa `localStorage` para preferência de tema e posição do menu. `layouts/partials/extend_head.html` também grava uma chave de migração de tema.
 - Giscus é carregado por `layouts/partials/comments.html` apenas no final de posts e conecta o visitante a `giscus.app`/GitHub.
 - Formspree recebe nome, e-mail e mensagem na página de contato.
 - Google Fonts é importado globalmente por `assets/css/extended/custom.css`.
 - Mermaid é importado de jsDelivr apenas em páginas cujo Markdown contém bloco Mermaid.
 - Não há Google Tag Manager nem script do AdSense.
-- Não há banner, central de preferências, categorias, carregamento condicional ou Consent Mode.
+- Não há banner, CMP publicada, central de preferências ou update de consentimento após escolha real.
 - A Política de Privacidade agora descreve esse estado atual e diferencia armazenamento funcional, Analytics e publicidade futura.
 
 ### Classificação das recomendações
@@ -95,9 +98,9 @@ A página gera título, descrição, canonical `https://dfls.eti.br/privacy/` e 
 |---|---|---|
 | Concluída na Fase 2 | Manter transparência sobre cookies, armazenamento, terceiros, Analytics e publicidade futura | A página `/privacy/` agora fornece essas informações e deve acompanhar futuras mudanças |
 | Obrigatória antes do AdSense | Definir e implementar CMP/fluxo de consentimento compatível com os territórios atendidos | Para tráfego do EEE, Reino Unido e Suíça, o Google exige CMP certificada integrada ao TCF; em 2026, a solução deve operar com TCF v2.3 |
-| Obrigatória antes do AdSense | Fazer GA4 e o futuro AdSense respeitarem o estado de consentimento | O GA4 atual carrega antes de qualquer decisão e DNT não cobre todos os requisitos |
+| Parcialmente concluída na Fase 3 | Fazer GA4 e o futuro AdSense respeitarem o estado de consentimento | GA4 já recebe default negado antes do config; ainda faltam os updates e testes com a CMP real |
 | Recomendada | Separar categorias “necessários/funcionais”, “analytics” e “publicidade” | Facilita escolhas granulares e manutenção futura |
-| Recomendada | Integrar Consent Mode à CMP | Permite que GA4 e AdSense interpretem os sinais de consentimento de forma consistente |
+| Pendente no painel | Integrar Consent Mode à CMP | A fundação existe no código, mas a CMP do Google e seus controles ainda não foram configurados/publicados |
 | Recomendada | Oferecer link permanente “Preferências de privacidade” | Permite rever/revogar a decisão |
 | Opcional | Hospedar a fonte localmente | Reduz uma chamada externa e simplifica a lista de terceiros, sem ser requisito do AdSense |
 
@@ -129,7 +132,7 @@ Exemplo curto de configuração, ainda não implementado:
 params:
   adsense:
     enabled: false
-    client: "ca-pub-XXXXXXXXXXXXXXX"
+    client: ""
     autoAds: false
 ```
 
@@ -143,9 +146,9 @@ Condição recomendada no `extend_head.html`:
 
 Pontos importantes:
 
-- usar `hugo.IsProduction`, e não apenas `params.env`, porque hoje `params.env: production` está fixo no arquivo comum;
+- `params.env: production` foi removido; manter `hugo.IsProduction` como condição obrigatória para tags reais;
 - manter `enabled: false` como padrão e ativar em configuração de produção, por exemplo `config/production/hugo.yml`, ou por parâmetro controlado no deploy;
-- não carregar o script enquanto a CMP ainda não tiver estabelecido os sinais necessários; a ordem CMP/Consent Mode/AdSense deve ser testada;
+- definir o default negado antes de qualquer tag e deixar somente a CMP certificada publicar updates; a ordem completa deve ser testada;
 - evitar duplicar o script global: anúncios automáticos e unidades manuais compartilham o mesmo carregamento base;
 - permitir flags por página, como `ads: false`, para Sobre, Contato, políticas e projetos;
 - inserir unidade manual com partial/shortcode apenas quando houver `slot` configurado, sem IDs espalhados pelos templates.
@@ -222,7 +225,7 @@ Recomenda-se manter uma varredura de segredos na CI e revisar capturas de tela a
 - CSS final: aproximadamente 25 KB.
 - JavaScript de busca: aproximadamente 18 KB, carregado somente na busca.
 - `particles.js` + `app.js`: aproximadamente 47 KB, somente na home.
-- GA4 e Google Fonts são recursos externos globais.
+- Google Fonts é global; GA4 é carregado somente em produção, sob Consent Mode default negado e quando DNT não está ativo.
 - Giscus é assíncrono e limitado aos posts.
 - Mermaid é um módulo externo potencialmente pesado, mas só é importado quando o conteúdo contém diagrama Mermaid.
 
@@ -230,14 +233,14 @@ O site atual é leve. O AdSense provavelmente se tornará o maior componente de 
 
 ## Bloqueadores para solicitar AdSense
 
-1. **Consentimento não implementado**, embora o GA4 já carregue globalmente; é necessário escolher CMP/fluxo e garantir que Analytics e AdSense respeitem o estado de consentimento e as regiões aplicáveis.
-2. **Arquitetura de produção ainda sem proteção adequada por ambiente**: `params.env: production` está fixo, portanto o futuro código de anúncios não deve depender somente desse valor.
+1. **CMP certificada e mensagem ainda não configuradas/publicadas**: a fundação local não coleta escolhas nem produz updates por conta própria.
+2. **Fluxo completo ainda não validado com escolha real**: aceite, recusa, alteração e revogação precisam ser verificados com Tag Assistant após a publicação da CMP.
 
-Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado foram corrigidos na Fase 1. A Política de Privacidade, a seção de cookies, a transparência sobre terceiros e o link institucional no rodapé foram concluídos na Fase 2. Consentimento e configuração por ambiente continuam pendentes.
+Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado foram corrigidos na Fase 1. A Política de Privacidade, a seção de cookies, a transparência e o link institucional foram concluídos na Fase 2. Na Fase 3, a fundação do Consent Mode, a ordem do GA4, DNT e a separação de ambientes foram concluídos no código; a integração externa com a CMP continua pendente.
 
 ## Melhorias recomendadas
 
-1. Adicionar um link de preferências de privacidade ao rodapé quando esse recurso existir na Fase 3.
+1. Adicionar um link de preferências de privacidade ao rodapé quando a CMP publicada oferecer esse recurso.
 2. Adicionar à CI o build e um verificador de links/arquivos referenciados.
 3. Avaliar hospedar a fonte localmente para reduzir terceiros; é opcional.
 
@@ -253,9 +256,9 @@ Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado for
 
 ## Próximos passos
 
-1. Escolher a CMP, preferencialmente avaliando primeiro a solução integrada do Google por simplicidade e custo, e definir o comportamento regional.
-2. Fazer GA4 respeitar consentimento e testar aceitar, recusar, revogar e DNT em uma versão de homologação.
-3. Revisar a Política de Privacidade para refletir o mecanismo de consentimento efetivamente adotado.
+1. Configurar a CMP no Google AdSense Privacy & messaging, habilitar os sinais de Consent Mode e publicar a mensagem aplicável.
+2. Validar no Tag Assistant default, aceite, recusa, alteração, revogação, DNT e ausência de duplicidade.
+3. Revisar a Política de Privacidade para refletir a CMP efetivamente publicada e disponibilizar preferências/revogação.
 4. Implementar a configuração e os partials de AdSense, ainda com `enabled: false`.
 5. Validar em ambiente de produção controlado que não há script/ad request em páginas excluídas nem em desenvolvimento.
 6. Ativar inicialmente uma única unidade responsiva ao final dos posts e acompanhar experiência e métricas antes de expandir.

@@ -29,7 +29,6 @@ privacy:
     respectDoNotTrack: true
 
 params:
-  env: production
   title: "Dirlei Friedrich"
   description: "Engenheiro de Software com sólida experiência em ERP Protheus e foco em PostgreSQL, automação e confiabilidade."
   keywords:
