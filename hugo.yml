@@ -78,7 +78,7 @@ params:
       url: "https://gitlab.com/dirleiflsilva"
 
   footer:
-    text: "[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)"
+    text: "[Política de Privacidade](/privacy/) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)"
 
   giscus:
     enable: true
