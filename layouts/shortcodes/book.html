@@ -1,0 +1,30 @@
+<div class="book-recommendation">
+  <div class="book-recommendation__label">
+    📚 Leitura recomendada
+  </div>
+
+  <div class="book-recommendation__title">
+    {{ .Get "title" }}
+  </div>
+
+  {{ with .Get "authors" }}
+  <div class="book-recommendation__authors">
+    {{ . }}
+  </div>
+  {{ end }}
+
+  {{ with .Get "description" }}
+  <p class="book-recommendation__description">
+    {{ . }}
+  </p>
+  {{ end }}
+
+  <a
+    class="book-recommendation__link"
+    href="{{ .Get "url" }}"
+    target="_blank"
+    rel="sponsored nofollow noopener"
+  >
+    Ver na Amazon →
+  </a>
+</div>

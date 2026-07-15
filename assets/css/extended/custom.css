@@ -137,6 +137,51 @@
   color: var(--brand-accent);
 }
 
+.book-recommendation {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  color: var(--content);
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.book-recommendation__label {
+  margin-bottom: 0.75rem;
+  color: var(--secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.book-recommendation__title {
+  color: var(--primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.book-recommendation__authors {
+  margin-top: 0.25rem;
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+
+.book-recommendation .book-recommendation__description {
+  margin: 0.75rem 0;
+}
+
+.book-recommendation__link {
+  display: inline-block;
+  color: var(--brand-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.book-recommendation__link:hover {
+  text-decoration: underline;
+}
+
 .related-posts {
   margin-top: 26px;
   padding-top: 10px;

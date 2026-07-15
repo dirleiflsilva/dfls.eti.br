@@ -186,6 +186,26 @@ Talvez essa seja a principal lição do modelo CALMS e das Três Maneiras: a tec
 
 ---
 
+## Para aprofundar
+
+Dois livros foram importantes para compreender melhor os conceitos discutidos neste artigo.
+
+{{< book
+    title="O Projeto Fênix"
+    authors="Gene Kim, Kevin Behr e George Spafford"
+    description="Uma narrativa sobre transformação DevOps que ajuda a visualizar silos, gargalos e problemas no fluxo de entrega."
+    url="https://link.amazon/B06Mjj5nZ"
+>}}
+
+{{< book
+    title="Manual de DevOps"
+    authors="Gene Kim, Jez Humble, Patrick Debois e John Willis"
+    description="Aprofunda os princípios das Três Maneiras e práticas relacionadas a fluxo, feedback, experimentação e aprendizado contínuo."
+    url="https://link.amazon/B041f14Ui"
+>}}
+
+> **Transparência:** os links para os livros acima são links de afiliados. Posso receber uma comissão por compras realizadas por meio deles, sem custo adicional para você.
+
 ## Referências
 
 - [Proposta de solução: devops-transformation-case-study](https://github.com/dirleiflsilva/devops-transformation-case-study)
