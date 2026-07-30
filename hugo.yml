@@ -77,6 +77,8 @@ params:
       url: "https://github.com/dirleiflsilva"
     - name: gitlab
       url: "https://gitlab.com/dirleiflsilva"
+    - name: x
+      url: "https://x.com/dirleiflsilva"
 
   footer:
     text: "[Política de Privacidade](/privacy/) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)"
