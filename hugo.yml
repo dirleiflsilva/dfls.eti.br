@@ -32,7 +32,7 @@ params:
   adsense:
     publisherId: "ca-pub-9373917420304685"
   title: "Dirlei Friedrich"
-  description: "Engenheiro de Software com sólida experiência em ERP Protheus e foco em PostgreSQL, automação e confiabilidade."
+  description: "Desenvolvedor com sólida experiência em ERP Protheus e especializado em PostgreSQL Engineering, atuando na construção de ambientes confiáveis por meio de Database Reliability, automação, observabilidade, performance e DevOps."
   keywords:
     - PostgreSQL
     - Database Reliability
@@ -67,7 +67,7 @@ params:
 
   homeInfoParams:
     Title: "Dirlei Friedrich"
-    Content: "ERP Protheus | AdvPL/TL++ | PostgreSQL | Database Reliability | Automation"
+    Content: "ERP Protheus | AdvPL/TL++ | PostgreSQL Engineering | Automation"
   mainSections: []
 
   socialIcons:

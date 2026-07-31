@@ -13,6 +13,9 @@ tags:
 topics:
   - Protheus e AdvPL
   - DevOps e Confiabilidade
+series:
+  - Protheus Docker Lab
+series_order: 1
 description: "Montagem de um laboratório Protheus com Docker Compose, PostgreSQL, DBAccess, AppServer e License Server, com foco em ambiente reproduzível e práticas DevOps."
 ---
 
