@@ -1,0 +1,13 @@
+{{- $profile := site.Params.authorProfile -}}
+{{- if and $profile $profile.bio (not (.Param "hideAuthorBio")) -}}
+<aside class="author-bio" aria-labelledby="author-bio-title">
+  <p class="author-bio__eyebrow">Sobre o autor</p>
+  <h2 id="author-bio-title">
+    <a href="{{ $profile.url | relLangURL }}" rel="author">{{ site.Params.author | default site.Title }}</a>
+  </h2>
+  <p>{{ $profile.bio }}</p>
+  <a class="author-bio__profile" href="{{ $profile.url | relLangURL }}" rel="author">
+    Conheça minha experiência e áreas de atuação →
+  </a>
+</aside>
+{{- end -}}

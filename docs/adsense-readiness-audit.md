@@ -32,13 +32,14 @@ A conta AdSense foi criada e o domínio `dfls.eti.br` está conectado pelo Publi
 | ✅ OK | Configuração por ambiente | `params.env: production` removido; partial local depende de `hugo.IsProduction`; build development não contém Google tag ou Measurement ID | Manter deploy explícito e testar regressões | Baixa |
 | ⚠️ Parcial | Conexão da conta AdSense | Conta criada; `dfls.eti.br` conectado em produção via meta `google-adsense-account`, usando o Publisher ID centralizado; sem código de anúncios | Publicar e aguardar a validação/revisão no painel Google | Alta |
 | ✅ OK | Conteúdo publicado | 18 posts publicados e nove rascunhos futuros; nenhum post vazio ou de teste detectado | Manter consistência editorial e reforçar evidências autorais | Baixa |
+| ✅ OK | Autoria | Os 18 artigos exibem assinatura clicável para `/about/`, bio editorial e `BlogPosting.author` vinculado a uma entidade `Person`; a página Sobre gera `ProfilePage` | Manter nome, bio e perfis externos centralizados em `hugo.yml` | Baixa |
 | ✅ OK | Índice do Blog | `content/posts/_index.md` organiza temas, séries e publicações recentes; `/posts/arquivo/` funciona como arquivo completo | Manter como índice principal | Baixa |
-| ✅ OK | Projetos | Três projetos publicados com estado, stack, repositório e vínculos para artigos técnicos | Expandir evidências/resultados conforme os projetos evoluírem | Baixa |
+| ✅ OK | Projetos | Três projetos publicados com estado, stack, repositório e vínculos para artigos técnicos; a home apresenta um destaque compacto com links para os projetos e seus artigos relacionados | Expandir evidências/resultados conforme os projetos evoluírem | Baixa |
 | ✅ OK | Links internos | 709 referências locais verificadas no build; nenhuma quebrada | Adicionar verificação à CI para prevenir regressões | Baixa |
-| ✅ OK | Taxonomias editoriais | Conteúdo organizado por tópicos e séries; tags continuam disponíveis como apoio | Reduzir a indexação de tags superficiais em etapa própria | Média |
+| ✅ OK | Taxonomias editoriais | Tópicos e séries permanecem indexáveis; `/tags/`, os 49 termos de tags e `/search/` continuam navegáveis, mas recebem `noindex` e não entram no sitemap | Manter a regra centralizada de cascade ao criar novas taxonomias utilitárias | Baixa |
 | ✅ OK | Títulos e descrições | Home, posts, projetos, Sobre, Contato, Privacidade e Obrigado geram `<title>` e meta description | Revisar apenas páginas automáticas de taxonomia/feeds | Baixa |
 | ✅ OK | Canonical e Open Graph | PaperMod gera canonical absoluto, Open Graph, Twitter Cards e JSON-LD em produção | Manter `baseURL` correto por ambiente | Baixa |
-| ✅ OK | Sitemap e robots.txt | `/sitemap.xml` e `/robots.txt` são gerados; robots permite rastreamento e aponta o sitemap | Manter | Baixa |
+| ✅ OK | Sitemap e robots.txt | `/sitemap.xml` contém somente as 40 URLs públicas indexáveis; busca, tags superficiais e confirmação de contato foram retiradas sem bloquear o rastreamento do site | Manter | Baixa |
 | ✅ OK | Favicon | Os cinco assets esperados pelo PaperMod foram derivados do ícone SVG existente e são gerados corretamente | Manter os arquivos ao alterar a identidade visual | Baixa |
 | ✅ OK | `baseURL` e domínio | `https://dfls.eti.br/` e `static/CNAME` (`dfls.eti.br`) são coerentes | Manter | Baixa |
 | ✅ OK | Segredos versionados | Nenhum `.env`, chave privada, token de formatos comuns ou credencial real foi localizado | Manter varredura; exemplos de senhas devem continuar claramente fictícios | Média |

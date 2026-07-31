@@ -1,3 +1,4 @@
+{{- $page := . -}}
 {{- with site.Params.homeInfoParams }}
 <section class="home-hero-shell">
   <div id="particles-js" aria-hidden="true"></div>
@@ -14,3 +15,7 @@
   </article>
 </section>
 {{- end -}}
+
+<section class="home-blog-index" aria-labelledby="home-blog-title">
+  {{- partial "blog_index.html" (dict "Page" $page "ShowIntro" true) }}
+</section>

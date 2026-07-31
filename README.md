@@ -131,6 +131,10 @@ A relação é calculada pelo Hugo com os pesos definidos em `related`:
 
 São exibidos até 5 posts relacionados.
 
+### Autoria
+
+O perfil do autor é centralizado em `params.author` e `params.authorProfile` no `hugo.yml`. O nome exibido nos metadados aponta para `/about/`, e os posts recebem uma bio curta por `layouts/partials/author_bio.html`. Use `hideAuthorBio: true` no front matter apenas quando um conteúdo não deva exibir esse bloco.
+
 ### Mermaid
 
 Diagramas **Mermaid** são carregados sob demanda em `layouts/partials/extend_head.html`.
@@ -146,9 +150,9 @@ Isso evita carregar a biblioteca em páginas que não usam diagramas.
 
 ### Home
 
-A home usa `homeInfoParams` do PaperMod e scripts de partículas carregados apenas na página inicial por `layouts/partials/extend_footer.html`.
+A home usa `homeInfoParams` do PaperMod e scripts de partículas carregados apenas na página inicial por `layouts/partials/extend_footer.html`. Abaixo do hero, ela reutiliza `layouts/partials/blog_index.html` para apresentar busca, temas, séries e artigos recentes com a mesma navegação editorial de `/posts/`. Quando esse partial é usado na home, também exibe uma seleção compacta dos projetos e laboratórios publicados.
 
-`params.mainSections` permanece vazio de forma intencional. Isso mantém a home como apresentação profissional, sem duplicar nela o índice editorial disponível em `/posts/`. O arquivo cronológico exclusivo dos artigos fica em `/posts/arquivo/`.
+`params.mainSections` permanece vazio de forma intencional. Isso impede a listagem automática do PaperMod e permite que a navegação editorial da home seja controlada pelo partial compartilhado. O arquivo cronológico completo dos artigos fica em `/posts/arquivo/`.
 
 O menu principal aponta para:
 

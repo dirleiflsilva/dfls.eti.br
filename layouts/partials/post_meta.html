@@ -1,0 +1,32 @@
+{{- /*
+  Baseado em themes/PaperMod/layouts/partials/post_meta.html.
+  Referência PaperMod: commit 1cf53273c3ba58f0593ecb7c2befe11274f51a4e.
+  Alteração local: transforma a assinatura do autor em link para o perfil interno.
+*/ -}}
+{{- $scratch := newScratch }}
+
+{{- if not .Date.IsZero -}}
+{{- $scratch.Add "meta" (slice (printf "<span title='%s'>%s</span>" (.Date) (.Date | time.Format (default ":date_long" site.Params.DateFormat)))) }}
+{{- end }}
+
+{{- if (.Param "ShowReadingTime") -}}
+{{- $scratch.Add "meta" (slice (printf "<span>%s</span>" (i18n "read_time" .ReadingTime | default (printf "%d min" .ReadingTime)))) }}
+{{- end }}
+
+{{- if (.Param "ShowWordCount") -}}
+{{- $scratch.Add "meta" (slice (printf "<span>%s</span>" (i18n "words" .WordCount | default (printf "%d words" .WordCount)))) }}
+{{- end }}
+
+{{- if not (.Param "hideAuthor") -}}
+{{- with (partial "author.html" .) }}
+  {{- $author := . -}}
+  {{- with site.Params.authorProfile.url -}}
+    {{- $author = printf `<a class="post-author-link" href="%s" rel="author">%s</a>` (. | relLangURL) $author -}}
+  {{- end -}}
+  {{- $scratch.Add "meta" (slice (printf "<span>%s</span>" $author)) }}
+{{- end }}
+{{- end }}
+
+{{- with ($scratch.Get "meta") }}
+{{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
+{{- end -}}

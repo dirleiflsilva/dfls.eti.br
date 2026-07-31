@@ -1,0 +1,179 @@
+{{- /*
+  Baseado em themes/PaperMod/layouts/partials/templates/schema_json.html.
+  Referência PaperMod: commit 1cf53273c3ba58f0593ecb7c2befe11274f51a4e.
+  Alterações locais: entidade Person canônica, ProfilePage em /about/ e author.url nos artigos.
+*/ -}}
+{{- $profileURL := site.Params.authorProfile.url | default "/about/" | absURL -}}
+{{- $profileRelURL := site.Params.authorProfile.url | default "/about/" | relLangURL -}}
+{{- $personID := printf "%s#person" $profileURL -}}
+{{- $authorName := site.Params.author | default site.Title -}}
+{{- $publisherType := site.Params.schema.publisherType | default "Organization" | title -}}
+
+{{ if .IsHome }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{{ $publisherType }}",
+  {{- if eq $publisherType "Person" }}
+  "@id": {{ $personID }},
+  {{- end }}
+  "name": {{ site.Title }},
+  "url": {{ cond (eq $publisherType "Person") $profileURL site.Home.Permalink }},
+  "description": {{ site.Params.description | plainify | truncate 180 | safeHTML }},
+  {{- if eq $publisherType "Person" }}
+  "jobTitle": {{ site.Params.authorProfile.jobTitle }},
+  {{- else }}
+  "logo": {{ site.Params.assets.favicon | default "favicon.ico" | absURL }},
+  {{- end }}
+  "sameAs": [
+    {{- if site.Params.schema.sameAs }}
+      {{ range $i, $e := site.Params.schema.sameAs }}{{ if $i }}, {{ end }}{{ trim $e " " }}{{ end }}
+    {{- else}}
+      {{ range $i, $e := site.Params.SocialIcons }}{{ if $i }}, {{ end }}{{ trim $e.url " " | safeURL }}{{ end }}
+    {{- end}}
+  ]
+}
+</script>
+{{- else if (or .IsPage .IsSection) }}
+{{/* BreadcrumbList */}}
+{{- $url := replace .Parent.Permalink ( printf "%s" site.Home.Permalink) "" }}
+{{- $lang_url := strings.TrimPrefix ( printf "%s/" .Lang) $url }}
+{{- $bc_list := (split $lang_url "/")}}
+
+{{- $scratch := newScratch }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+  {{- range $index, $element := $bc_list }}
+
+    {{- $scratch.Add "path" (printf "%s/" $element ) | safeJS }}
+    {{- $bc_pg := site.GetPage ($scratch.Get "path") -}}
+
+    {{- if (and ($bc_pg) (gt (len . ) 0))}}
+    {{- if (and $index)}}, {{end }}
+    {
+      "@type": "ListItem",
+      "position": {{ add 1 $index  }},
+      "name": {{ $bc_pg.Name }},
+      "item": {{ $bc_pg.Permalink | safeHTML }}
+    }
+    {{- end }}
+
+  {{- end }}
+  {{- /*  self-page addition  */ -}}
+  {{- if (ge (len $bc_list) 2) }}, {{end }}
+    {
+      "@type": "ListItem",
+      "position": {{len $bc_list}},
+      "name": {{ .Name }},
+      "item": {{ .Permalink | safeHTML }}
+    }
+  ]
+}
+</script>
+
+{{- if eq .RelPermalink $profileRelURL }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": {{ .Permalink }},
+  "url": {{ .Permalink }},
+  "name": {{ .Title }},
+  "description": {{ .Description | plainify }},
+  "mainEntity": {
+    "@type": "Person",
+    "@id": {{ $personID }},
+    "name": {{ $authorName }},
+    "url": {{ $profileURL }},
+    "jobTitle": {{ site.Params.authorProfile.jobTitle }},
+    "description": {{ site.Params.authorProfile.bio | plainify }},
+    "sameAs": [
+      {{- if site.Params.schema.sameAs }}
+        {{ range $i, $e := site.Params.schema.sameAs }}{{ if $i }}, {{ end }}{{ trim $e " " }}{{ end }}
+      {{- else}}
+        {{ range $i, $e := site.Params.SocialIcons }}{{ if $i }}, {{ end }}{{ trim $e.url " " | safeURL }}{{ end }}
+      {{- end}}
+    ]
+  }
+}
+</script>
+{{- end }}
+
+{{- if .IsPage }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ .Title | plainify}},
+  "name": "{{ .Title | plainify }}",
+  "description": {{ with .Description | plainify }}{{ . }}{{ else }}{{ .Summary | plainify  }}{{ end -}},
+  "keywords": [
+    {{- if .Params.keywords }}
+    {{ range $i, $e := .Params.keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}
+    {{- else }}
+    {{ range $i, $e := .Params.tags }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}
+    {{- end }}
+  ],
+  "articleBody": {{ .Content | safeJS | htmlUnescape | plainify }},
+  "wordCount" : "{{ .WordCount }}",
+  "inLanguage": {{ .Language.Lang | default "en-us" }},
+  {{ if .Params.cover.image -}}
+  "image":
+    {{- if (ne .Params.cover.relative true) -}}
+    {{ .Params.cover.image | absURL }},
+    {{- else -}}
+    {{ (path.Join .RelPermalink .Params.cover.image ) | absURL }},
+    {{- end}}
+  {{- else }}
+    {{- $images := partial "templates/_funcs/get-page-images" . -}}
+    {{- with index $images 0 -}}
+  "image": {{ .Permalink }},
+    {{- end }}
+  {{- end -}}
+  "datePublished": {{ .PublishDate }},
+  "dateModified": {{ .Lastmod }},
+  {{- with (.Params.author | default site.Params.author) }}
+  "author":
+    {{- if (or (eq (printf "%T" .) "[]string") (eq (printf "%T" .) "[]interface {}")) -}}
+  [{{- range $i, $v := . -}}
+  {{- if $i }}, {{end -}}
+  {
+    "@type": "Person",
+    "name": {{ $v }}{{ if eq $v $authorName }},
+    "@id": {{ $personID }},
+    "url": {{ $profileURL }}{{ end }}
+  }
+  {{- end }}],
+    {{- else -}}
+  {
+    "@type": "Person",
+    "name": {{ . }}{{ if eq . $authorName }},
+    "@id": {{ $personID }},
+    "url": {{ $profileURL }}{{ end }}
+  },
+    {{- end -}}
+  {{- end }}
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ .Permalink | safeHTML }}
+  },
+  "publisher": {
+    "@type": "{{ $publisherType }}",
+    {{- if eq $publisherType "Person" }}
+    "@id": {{ $personID }},
+    {{- end }}
+    "name": {{ site.Title }},
+    "url": {{ cond (eq $publisherType "Person") $profileURL site.Home.Permalink }}{{ if ne $publisherType "Person" }},
+    "logo": {
+      "@type": "ImageObject",
+      "url": {{ site.Params.assets.favicon | default "favicon.ico" | absURL }}
+    }{{ end }}
+  }
+}
+</script>
+{{- end }}{{/* .IsPage end */}}
+
+{{- end -}}

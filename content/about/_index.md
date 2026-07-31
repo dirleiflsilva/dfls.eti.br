@@ -5,7 +5,7 @@ url = "/about/"
 summary = "Engenheiro de Software com foco em ERP Protheus, integracoes, dados e automacao."
 +++
 
-Engenheiro de Software com atuação consolidada em ERP Microsiga Protheus (TOTVS), especializado em integrações de sistemas, rotinas fiscais e automação de processos empresariais.
+Sou **Dirlei Friedrich**, Engenheiro de Software com atuação consolidada em ERP Microsiga Protheus (TOTVS), especializado em integrações de sistemas, rotinas fiscais e automação de processos empresariais.
 
 Experiência prática na construção de soluções críticas envolvendo documentos fiscais eletrônicos (NFe, CTe, NFSe), integrações com APIs externas, processamento e validação de XML, persistência estruturada de dados e controle de consistência operacional.
 

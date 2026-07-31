@@ -50,6 +50,8 @@
 
   {{- $isPost := eq .Section "posts" -}}
   {{- if $isPost }}
+  {{- partial "author_bio.html" . }}
+
   <footer class="post-footer">
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">
