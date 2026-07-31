@@ -210,6 +210,31 @@ Campos úteis:
 - `disableShare: true`: desativa botões de compartilhamento em um post específico
 - `showrelatedposts: false`: desativa posts relacionados em um post específico
 - `comments: false`: desativa comentários em uma página específica
+- `affiliate: true`: exibe automaticamente o aviso de afiliados e identifica os cartões comerciais do artigo
+
+### Links de afiliados
+
+Artigos com links patrocinados ou de afiliados devem incluir no front matter:
+
+```yaml
+affiliate: true
+```
+
+O aviso será exibido automaticamente entre o cabeçalho e o conteúdo do artigo. Para repetir o mesmo aviso próximo a um bloco específico, use:
+
+```go-html-template
+{{</* affiliate-disclosure */>}}
+```
+
+Arquivos relacionados:
+
+- `content/cookies/_index.md`: Política de Cookies
+- `content/divulgacao-de-afiliados/_index.md`: divulgação geral e declaração da Amazon
+- `layouts/partials/affiliate-disclosure.html`: texto reutilizado pelo aviso
+- `layouts/shortcodes/affiliate-disclosure.html`: inserção manual no conteúdo
+- `layouts/shortcodes/book.html`: identificação próxima aos links de livros
+- `assets/css/extended/affiliate-disclosure.css`: apresentação nos modos claro e escuro
+- `hugo.yml`: links institucionais exibidos no rodapé
 
 ## Observações
 

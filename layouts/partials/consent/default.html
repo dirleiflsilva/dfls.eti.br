@@ -1,13 +1,76 @@
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    window.dataLayer.push(arguments);
-  }
+  (function () {
+    var storageKey = "dfls-privacy-consent-v1";
+    var version = 1;
+    var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    var doNotTrackEnabled = dnt === "1" || dnt === "yes";
+    var savedPreferences = null;
 
-  gtag("consent", "default", {
-    analytics_storage: "denied",
-    ad_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied"
-  });
+    try {
+      savedPreferences = JSON.parse(localStorage.getItem(storageKey));
+      if (!savedPreferences || savedPreferences.version !== version) {
+        savedPreferences = null;
+      }
+    } catch (error) {
+      savedPreferences = null;
+    }
+
+    var consentState = {
+      version: version,
+      decided: Boolean(savedPreferences),
+      analytics: Boolean(savedPreferences && savedPreferences.analytics && !doNotTrackEnabled),
+      advertising: Boolean(savedPreferences && savedPreferences.advertising),
+      doNotTrack: doNotTrackEnabled
+    };
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () {
+      window.dataLayer.push(arguments);
+    };
+
+    window.dflsPrivacy = {
+      storageKey: storageKey,
+      getState: function () {
+        return Object.assign({}, consentState);
+      },
+      save: function (preferences) {
+        consentState.decided = true;
+        consentState.analytics = Boolean(preferences.analytics && !doNotTrackEnabled);
+        consentState.advertising = Boolean(preferences.advertising);
+
+        var storedPreferences = {
+          version: version,
+          analytics: consentState.analytics,
+          advertising: consentState.advertising,
+          decidedAt: new Date().toISOString()
+        };
+
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(storedPreferences));
+        } catch (error) {
+          // The choice still applies to the current page when storage is unavailable.
+        }
+
+        window.gtag("consent", "update", {
+          analytics_storage: consentState.analytics ? "granted" : "denied",
+          ad_storage: consentState.advertising ? "granted" : "denied",
+          ad_user_data: consentState.advertising ? "granted" : "denied",
+          ad_personalization: consentState.advertising ? "granted" : "denied"
+        });
+
+        window.dispatchEvent(new CustomEvent("dfls:privacy-consent", {
+          detail: Object.assign({}, consentState)
+        }));
+
+        return Object.assign({}, consentState);
+      }
+    };
+
+    window.gtag("consent", "default", {
+      analytics_storage: consentState.analytics ? "granted" : "denied",
+      ad_storage: consentState.advertising ? "granted" : "denied",
+      ad_user_data: consentState.advertising ? "granted" : "denied",
+      ad_personalization: consentState.advertising ? "granted" : "denied"
+    });
+  })();
 </script>

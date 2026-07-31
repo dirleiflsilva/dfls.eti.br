@@ -3,6 +3,7 @@ title: "DevOps além das ferramentas: lições de um estudo de caso sobre CALMS 
 date: 2026-06-06
 draft: false
 toc: true
+affiliate: true
 slug: "devops-alem-das-ferramentas-calms-tres-maneiras"
 description: "Lições de um estudo de caso sobre transformação DevOps, usando o modelo CALMS e as Três Maneiras para melhorar cultura, fluxo, feedback e aprendizado."
 tags:
@@ -202,8 +203,6 @@ Dois livros foram importantes para compreender melhor os conceitos discutidos ne
     description="Aprofunda os princípios das Três Maneiras e práticas relacionadas a fluxo, feedback, experimentação e aprendizado contínuo."
     url="https://link.amazon/B041f14Ui"
 >}}
-
-> **Transparência:** os links para os livros acima são links de afiliados. Posso receber uma comissão por compras realizadas por meio deles, sem custo adicional para você.
 
 ## Referências
 

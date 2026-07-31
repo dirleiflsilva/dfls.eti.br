@@ -19,6 +19,10 @@
   </p>
   {{ end }}
 
+  {{ if .Page.Params.affiliate }}
+  <span class="affiliate-link-label">Link de afiliado</span>
+  {{ end }}
+
   <a
     class="book-recommendation__link"
     href="{{ .Get "url" }}"

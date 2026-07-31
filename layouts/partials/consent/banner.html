@@ -1,0 +1,178 @@
+<section
+  class="privacy-banner"
+  data-privacy-banner
+  aria-label="Preferências de privacidade"
+  hidden>
+  <div class="privacy-banner__content">
+    <p>
+      Utilizamos cookies e tecnologias semelhantes necessários ao funcionamento do site.
+      Com sua autorização, usamos ferramentas de análise e, futuramente, de publicidade.
+    </p>
+    <a href="{{ "/privacy/" | relLangURL }}">Saiba mais na Política de Privacidade</a>.
+  </div>
+  <div class="privacy-banner__actions">
+    <button type="button" class="privacy-button privacy-button--secondary" data-consent-reject>
+      Não consentir
+    </button>
+    <button type="button" class="privacy-button privacy-button--secondary" data-consent-manage>
+      Gerenciar opções
+    </button>
+    <button type="button" class="privacy-button privacy-button--primary" data-consent-accept>
+      Consentir
+    </button>
+  </div>
+</section>
+
+<dialog class="privacy-dialog" data-privacy-dialog aria-labelledby="privacy-dialog-title">
+  <form class="privacy-dialog__panel" data-consent-form>
+    <div class="privacy-dialog__header">
+      <div>
+        <p class="privacy-dialog__eyebrow">Privacidade</p>
+        <h2 id="privacy-dialog-title">Gerenciar opções</h2>
+      </div>
+      <button type="button" class="privacy-dialog__close" data-consent-close aria-label="Fechar preferências">
+        &times;
+      </button>
+    </div>
+
+    <p class="privacy-dialog__intro">
+      Escolha quais tecnologias opcionais podem ser utilizadas. As necessárias permanecem
+      ativas para o funcionamento e para as preferências de interface do site.
+    </p>
+
+    <div class="privacy-option">
+      <div>
+        <strong>Necessários</strong>
+        <p>Preferências de tema, menu e registro da sua escolha de privacidade.</p>
+      </div>
+      <label class="privacy-switch" aria-label="Tecnologias necessárias sempre ativas">
+        <input type="checkbox" checked disabled>
+        <span>Sempre ativos</span>
+      </label>
+    </div>
+
+    <div class="privacy-option">
+      <div>
+        <strong>Analytics</strong>
+        <p>Ajuda a compreender acessos e uso do conteúdo por meio do Google Analytics 4.</p>
+        <p class="privacy-option__notice" data-dnt-notice hidden>
+          O sinal Do Not Track está ativo no navegador; o Analytics permanecerá desativado.
+        </p>
+      </div>
+      <label class="privacy-switch">
+        <input type="checkbox" data-consent-analytics>
+        <span>Permitir</span>
+      </label>
+    </div>
+
+    <div class="privacy-option">
+      <div>
+        <strong>Publicidade</strong>
+        <p>Reserva sua escolha para o Google AdSense, que ainda não exibe anúncios no site.</p>
+      </div>
+      <label class="privacy-switch">
+        <input type="checkbox" data-consent-advertising>
+        <span>Permitir</span>
+      </label>
+    </div>
+
+    <div class="privacy-dialog__actions">
+      <button type="button" class="privacy-button privacy-button--secondary" data-consent-reject>
+        Recusar opcionais
+      </button>
+      <button type="submit" class="privacy-button privacy-button--primary">
+        Salvar preferências
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+  (function () {
+    var privacy = window.dflsPrivacy;
+    var banner = document.querySelector("[data-privacy-banner]");
+    var dialog = document.querySelector("[data-privacy-dialog]");
+    var form = document.querySelector("[data-consent-form]");
+    var analyticsInput = document.querySelector("[data-consent-analytics]");
+    var advertisingInput = document.querySelector("[data-consent-advertising]");
+    var dntNotice = document.querySelector("[data-dnt-notice]");
+
+    if (!privacy || !banner || !dialog || !form) return;
+
+    function syncForm() {
+      var state = privacy.getState();
+      analyticsInput.checked = state.analytics;
+      analyticsInput.disabled = state.doNotTrack;
+      advertisingInput.checked = state.advertising;
+      dntNotice.hidden = !state.doNotTrack;
+    }
+
+    function openDialog() {
+      syncForm();
+      if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute("open", "");
+      }
+    }
+
+    function closeDialog() {
+      if (typeof dialog.close === "function") {
+        dialog.close();
+      } else {
+        dialog.removeAttribute("open");
+      }
+    }
+
+    function finish(preferences) {
+      privacy.save(preferences);
+      banner.hidden = true;
+      closeDialog();
+    }
+
+    document.querySelectorAll("[data-consent-accept]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        finish({ analytics: true, advertising: true });
+      });
+    });
+
+    document.querySelectorAll("[data-consent-reject]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        finish({ analytics: false, advertising: false });
+      });
+    });
+
+    document.querySelectorAll("[data-consent-manage]").forEach(function (button) {
+      button.addEventListener("click", openDialog);
+    });
+
+    document.querySelectorAll("[data-consent-close]").forEach(function (button) {
+      button.addEventListener("click", closeDialog);
+    });
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      finish({
+        analytics: analyticsInput.checked,
+        advertising: advertisingInput.checked
+      });
+    });
+
+    var preferencesLink = document.querySelector('a[href="#privacy-preferences"]');
+    if (preferencesLink) {
+      preferencesLink.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openDialog();
+      });
+    }
+
+    dialog.addEventListener("click", function (event) {
+      if (event.target === dialog) closeDialog();
+    });
+
+    if (!privacy.getState().decided) {
+      banner.hidden = false;
+    }
+  })();
+</script>

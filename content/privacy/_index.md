@@ -5,7 +5,7 @@ summary: "Informações sobre privacidade, cookies, serviços de terceiros e dir
 url: "/privacy/"
 ---
 
-Última atualização: **14 de julho de 2026**.
+Última atualização: **31 de julho de 2026**.
 
 ## Introdução
 
@@ -33,7 +33,9 @@ O site utiliza o **Google Analytics 4 (GA4)** para compreender acessos, navegaç
 
 Esses dados são processados pelo Google de acordo com suas configurações e políticas. Este site respeita o sinal *Do Not Track* quando ele é enviado pelo navegador, mas isso não substitui mecanismos de consentimento exigidos em determinadas regiões.
 
-Atualmente, o GA4 é carregado globalmente e ainda não existe um gerenciador de consentimento no site. Mecanismos futuros poderão controlar esse carregamento e permitir escolhas conforme a legislação aplicável.
+O GA4 utiliza o **Google Consent Mode v2**. Antes de uma escolha, o armazenamento analítico começa desativado. Quando o visitante autoriza a categoria Analytics nas preferências de privacidade, o site atualiza o sinal `analytics_storage` para permitir a medição; se houver recusa, ele permanece negado. Enquanto o consentimento estiver negado, a tag poderá enviar ao Google sinais sem cookies conforme o funcionamento do modo de consentimento avançado.
+
+A escolha pode ser alterada a qualquer momento pelo link **Preferências de privacidade** disponível no rodapé. Se o navegador enviar o sinal *Do Not Track*, o carregamento do GA4 é impedido e a categoria Analytics permanece desativada.
 
 Consulte a [documentação sobre a coleta de dados do Google Analytics](https://support.google.com/analytics/answer/11593727?hl=pt-BR) e a [Política de Privacidade do Google](https://policies.google.com/privacy?hl=pt-BR).
 
@@ -60,18 +62,21 @@ O tema utiliza `localStorage`, um armazenamento mantido no navegador, para prese
 - `pref-theme`, usada para recordar o tema claro ou escuro;
 - `pref-theme-default-light-v1`, usada na migração da preferência visual padrão;
 - `menu-scroll-position`, usada para preservar a posição do menu em telas menores.
+- `dfls-privacy-consent-v1`, usada para registrar as categorias opcionais aceitas ou recusadas e evitar que a mensagem seja repetida em todas as páginas.
 
 Essas informações são funcionais, permanecem no navegador e não são enviadas por esse código ao responsável pelo blog.
 
 ### Analytics
 
-O Google Analytics pode utilizar cookies e identificadores para distinguir sessões e produzir métricas de acesso. Como informado acima, ainda não há bloqueio condicional do GA4 baseado em consentimento.
+O Google Analytics pode utilizar cookies e identificadores para distinguir sessões e produzir métricas de acesso quando a categoria Analytics é autorizada. Sem essa autorização, `analytics_storage` permanece negado. A preferência pode ser revista pelo link permanente no rodapé.
 
 ### Publicidade futura
 
-O site ainda não carrega serviços ou scripts de publicidade. Caso o Google AdSense seja ativado futuramente, tecnologias de armazenamento e publicidade serão tratadas conforme a região, a legislação aplicável, as configurações adotadas e as escolhas de consentimento disponíveis naquele momento.
+O site ainda não carrega serviços ou scripts de publicidade. A interface de preferências já permite registrar uma escolha para essa categoria, mas essa escolha não ativa anúncios. Caso o Google AdSense seja ativado futuramente, a veiculação também dependerá da CMP certificada e dos sinais exigidos para a região do visitante.
 
 O visitante pode apagar ou bloquear cookies e dados de sites nas configurações do navegador. Essa ação pode remover preferências funcionais ou afetar recursos de terceiros.
+
+Informações detalhadas sobre categorias, serviços e formas de gerenciamento estão disponíveis na [Política de Cookies](/cookies/).
 
 ## Google Fonts
 
@@ -92,6 +97,12 @@ Antes da ativação, esta política e os mecanismos técnicos aplicáveis dever�
 ## Links externos
 
 Os artigos e páginas podem conter links para sites externos. O responsável pelo blog não controla as práticas de privacidade, segurança ou conteúdo desses serviços. Ao acessar outro site, o visitante deve consultar as políticas publicadas pelo respectivo fornecedor.
+
+## Links de afiliados
+
+Alguns artigos podem conter links de afiliados identificados. Se uma compra for realizada por meio deles, o autor poderá receber uma comissão, sem custo adicional para o visitante. O acesso ao link conduz a um site externo, sujeito às políticas e condições do respectivo fornecedor.
+
+Consulte a [Divulgação de Afiliados](/divulgacao-de-afiliados/) para conhecer os critérios editoriais, a participação no Programa de Associados da Amazon e a forma de identificação desses links.
 
 ## Direitos relacionados à LGPD
 

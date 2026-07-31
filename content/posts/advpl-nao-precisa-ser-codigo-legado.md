@@ -3,6 +3,7 @@ title: "AdvPL não precisa ser código legado: Engenharia de Software aplicada a
 date: 2026-07-27
 draft: false
 toc: true
+affiliate: true
 slug: "advpl-nao-precisa-ser-codigo-legado"
 description: "AdvPL é associado a sistemas legados, mas muitos problemas atribuídos à linguagem resultam de decisões de arquitetura, organização e manutenção."
 tags:
@@ -486,8 +487,6 @@ Os livros abaixo ampliam alguns dos temas discutidos neste artigo, como refatora
     description="Aprofunda características e decisões arquiteturais, componentes, acoplamento, coesão e os critérios usados para avaliar diferentes soluções."
     url="https://link.amazon/B0aJV5RY7"
 >}}
-
-> **Transparência:** os links para os livros acima são links de afiliados. Posso receber uma comissão por compras realizadas por meio deles, sem custo adicional para você.
 
 ## Uma nova série para o blog
 

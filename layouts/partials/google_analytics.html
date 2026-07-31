@@ -1,6 +1,5 @@
 {{- if and hugo.IsProduction (not site.Config.Privacy.GoogleAnalytics.Disable) -}}
   {{- with site.Config.Services.GoogleAnalytics.ID -}}
-    {{- partial "consent/default.html" $ -}}
     {{- partial "consent/google-tags.html" (dict
       "measurementID" .
       "respectDoNotTrack" site.Config.Privacy.GoogleAnalytics.RespectDoNotTrack

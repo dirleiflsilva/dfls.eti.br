@@ -2,18 +2,18 @@
 
 **Data da auditoria inicial:** 12/07/2026
 
-**Última revisão:** 14/07/2026
+**Última revisão:** 31/07/2026
 
 **Escopo:** configuração Hugo, tema PaperMod, layouts/partials locais, conteúdo versionado, assets estáticos e HTML produzido por um build limpo.  
-**Método:** inspeção estática do repositório, revisão das orientações oficiais atuais do Google, builds limpos de produção e desenvolvimento com Hugo 0.152.2, análise do HTML resultante e validação de 709 referências internas. Após a Fase 3, a conta AdSense foi conectada ao domínio exclusivamente pela meta tag oficial, sem implementar CMP, interface de consentimento ou publicidade.
+**Método:** inspeção estática do repositório, revisão das orientações oficiais atuais do Google, builds limpos de produção e desenvolvimento com Hugo 0.152.2, análise do HTML resultante e validação de 709 referências internas na auditoria inicial. A conta AdSense está conectada ao domínio pela meta tag oficial; a interface global de preferências controla o Consent Mode do GA4, sem ativar publicidade nem substituir a CMP certificada exigida para tráfego TCF.
 
 ## Resumo Executivo
 
 **Avaliação geral: Parcialmente pronto.**
 
-O site tem boa base técnica e editorial: domínio e `baseURL` coerentes, HTTPS como URL canônica, navegação clara, páginas Sobre, Contato e Política de Privacidade, 11 artigos publicados com conteúdo substancial, dois projetos, seção Blog formalizada, metadados essenciais, sitemap e robots.txt. O build com Hugo 0.152.2 terminou sem erros, gerou 109 páginas e uma página adicional de paginação, e a verificação local não encontrou links internos quebrados.
+O site tem boa base técnica e editorial: domínio e `baseURL` coerentes, HTTPS como URL canônica, navegação clara, páginas Sobre, Contato e Política de Privacidade, 18 artigos publicados, três projetos, seção Blog formalizada, metadados essenciais, sitemap e robots.txt. O build atual com Hugo 0.152.2 terminou sem erros e gerou 160 páginas e uma página adicional de paginação.
 
-A conta AdSense foi criada e o domínio `dfls.eti.br` está sendo conectado pelo Publisher ID configurado na meta tag oficial de produção. Isso não ativa anúncios: a revisão/aprovação do site continua pendente e nenhum script ou unidade de publicidade foi adicionado. A Política de Privacidade, a transparência e a fundação técnica do Consent Mode v2 foram implementadas, mas ainda falta configurar e publicar uma CMP certificada, receber updates reais de consentimento e validar o fluxo completo.
+A conta AdSense foi criada e o domínio `dfls.eti.br` está conectado pelo Publisher ID configurado na meta tag oficial de produção. Isso não ativa anúncios: a revisão/aprovação do site continua pendente e nenhum script ou unidade de publicidade foi adicionado. A Política de Privacidade e a interface global de preferências foram atualizadas; aceite, recusa e revogação agora produzem updates reais de Consent Mode. Ainda falta configurar a CMP certificada/TCF no painel antes de veicular publicidade abrangida pelos requisitos europeus.
 
 ## Checklist
 
@@ -24,18 +24,18 @@ A conta AdSense foi criada e o domínio `dfls.eti.br` está sendo conectado pelo
 | ✅ OK | Política de Privacidade | `content/privacy/_index.md`, URL `/privacy/`; página pública, indexável e com metadados próprios | Revisar quando serviços ou requisitos mudarem | Baixa |
 | ✅ OK | Política de Cookies | Seção equivalente incluída na Política de Privacidade, cobrindo armazenamento funcional, Analytics e publicidade futura | Atualizar junto da implementação de consentimento | Média |
 | ✅ OK | Transparência sobre terceiros | A política documenta GA4, Formspree, Giscus/GitHub, Google Fonts e jsDelivr/Mermaid com links oficiais essenciais | Manter alinhada ao código | Média |
-| ⚠️ Parcial | Consentimento atual | Consent Mode v2 começa com quatro estados negados, mas não existe CMP/mensagem publicada nem update após escolha real | Configurar a CMP certificada e validar aceite, recusa e revogação | Alta |
+| ⚠️ Parcial | Consentimento atual | Mensagem global, três escolhas, preferências granulares, persistência, revogação e updates do Consent Mode implementados; não gera TC String | Configurar a CMP certificada/TCF antes da publicidade europeia | Alta |
 | ✅ OK | Cookies/armazenamento próprio | A política classifica e descreve `pref-theme`, `pref-theme-default-light-v1` e `menu-scroll-position` como armazenamento funcional | Manter alinhado às chaves usadas pelo tema | Baixa |
 | ✅ OK | Carregamento do GA4 | Override local usa `services.googleAnalytics.id`; há um único loader e um único `gtag("config")`, ambos posteriores ao default de consentimento | Manter o fluxo único | Baixa |
 | ✅ OK | Ordem das tags | `dataLayer` → `gtag()` → `consent default` → loader `gtag.js` → configuração GA4, confirmados no HTML de produção | Revalidar após integrar a CMP | Média |
 | ✅ OK | DNT | Consent default permanece negado; DNT `1` ou `yes` impede loader e configuração GA4 sem conceder consentimento | Manter conservador | Baixa |
 | ✅ OK | Configuração por ambiente | `params.env: production` removido; partial local depende de `hugo.IsProduction`; build development não contém Google tag ou Measurement ID | Manter deploy explícito e testar regressões | Baixa |
 | ⚠️ Parcial | Conexão da conta AdSense | Conta criada; `dfls.eti.br` conectado em produção via meta `google-adsense-account`, usando o Publisher ID centralizado; sem código de anúncios | Publicar e aguardar a validação/revisão no painel Google | Alta |
-| ✅ OK | Conteúdo publicado | 11 posts versionados e publicados, aproximadamente 542–1.723 palavras cada; nenhum post vazio ou de teste detectado | Manter consistência editorial | Baixa |
-| ✅ OK | Índice do Blog | `content/posts/_index.md` define título, descrição, resumo e URL de `/posts/`; paginação passou a ser gerada após o 11º post | Manter como índice principal; avaliar arquivo cronológico quando o volume justificar | Baixa |
-| ⚠️ Parcial | Projetos | Dois projetos publicados; um deles tem cerca de 112 palavras, mas apresenta estado, stack e repositório | Expandir evidências/resultados quando houver material real | Baixa |
+| ✅ OK | Conteúdo publicado | 18 posts publicados e nove rascunhos futuros; nenhum post vazio ou de teste detectado | Manter consistência editorial e reforçar evidências autorais | Baixa |
+| ✅ OK | Índice do Blog | `content/posts/_index.md` organiza temas, séries e publicações recentes; `/posts/arquivo/` funciona como arquivo completo | Manter como índice principal | Baixa |
+| ✅ OK | Projetos | Três projetos publicados com estado, stack, repositório e vínculos para artigos técnicos | Expandir evidências/resultados conforme os projetos evoluírem | Baixa |
 | ✅ OK | Links internos | 709 referências locais verificadas no build; nenhuma quebrada | Adicionar verificação à CI para prevenir regressões | Baixa |
-| ✅ OK | Taxonomias | Conteúdo e archetype padronizados em `Projetos & Labs`; somente `/categories/projetos--labs/` é gerada | Manter a categoria padronizada em novos conteúdos | Baixa |
+| ✅ OK | Taxonomias editoriais | Conteúdo organizado por tópicos e séries; tags continuam disponíveis como apoio | Reduzir a indexação de tags superficiais em etapa própria | Média |
 | ✅ OK | Títulos e descrições | Home, posts, projetos, Sobre, Contato, Privacidade e Obrigado geram `<title>` e meta description | Revisar apenas páginas automáticas de taxonomia/feeds | Baixa |
 | ✅ OK | Canonical e Open Graph | PaperMod gera canonical absoluto, Open Graph, Twitter Cards e JSON-LD em produção | Manter `baseURL` correto por ambiente | Baixa |
 | ✅ OK | Sitemap e robots.txt | `/sitemap.xml` e `/robots.txt` são gerados; robots permite rastreamento e aponta o sitemap | Manter | Baixa |
@@ -47,7 +47,7 @@ A conta AdSense foi criada e o domínio `dfls.eti.br` está sendo conectado pelo
 | ✅ OK | Link institucional no rodapé | `params.footer.text` inclui `/privacy/`; o link aparece nas páginas principais e no 404 sem override do tema | Manter persistente | Baixa |
 | ✅ OK | Peso de imagens | Maior imagem estática tem cerca de 101 KB; nenhuma imagem excessivamente pesada foi detectada | Manter compressão proporcional | Baixa |
 | ⚠️ Parcial | Scripts e recursos externos | GA4 é exclusivo de produção e consent-aware com default negado; partículas, Giscus, Mermaid e Google Fonts mantêm o comportamento anterior | Integrar terceiros às escolhas conforme a estratégia da CMP exigir | Média |
-| ⚠️ Parcial | Consent Mode v2 | Fundação local concluída para `analytics_storage`, `ad_storage`, `ad_user_data` e `ad_personalization`; updates dependem da CMP | Publicar CMP e validar updates reais no Tag Assistant | Alta |
+| ✅ OK | Consent Mode v2 local | Default antes da tag, escolha persistida e updates seletivos para Analytics/publicidade; aceite, recusa e reabertura testados | Revalidar no Tag Assistant após o deploy | Média |
 | ℹ️ Opcional | Anúncio no meio do artigo | Não existe | Considerar somente em artigos longos, com regra explícita no front matter | Baixa |
 
 ## 1. Estrutura básica do site
@@ -91,7 +91,8 @@ A página gera título, descrição, canonical `https://dfls.eti.br/privacy/` e 
 - Mermaid é importado de jsDelivr apenas em páginas cujo Markdown contém bloco Mermaid.
 - Não há Google Tag Manager nem script do AdSense.
 - A meta tag `google-adsense-account` conecta a conta em produção, mas não carrega publicidade nem participa do fluxo de consentimento.
-- Não há banner, CMP publicada, central de preferências ou update de consentimento após escolha real.
+- Há uma única mensagem global com consentimento, recusa e gerenciamento; a central pode ser reaberta pelo rodapé e publica updates seletivos.
+- A interface local não é uma CMP TCF certificada e não gera TC String para publicidade europeia.
 - A Política de Privacidade agora descreve esse estado atual e diferencia armazenamento funcional, Analytics e publicidade futura.
 
 ### Classificação das recomendações
@@ -100,7 +101,7 @@ A página gera título, descrição, canonical `https://dfls.eti.br/privacy/` e 
 |---|---|---|
 | Concluída na Fase 2 | Manter transparência sobre cookies, armazenamento, terceiros, Analytics e publicidade futura | A página `/privacy/` agora fornece essas informações e deve acompanhar futuras mudanças |
 | Obrigatória antes do AdSense | Definir e implementar CMP/fluxo de consentimento compatível com os territórios atendidos | Para tráfego do EEE, Reino Unido e Suíça, o Google exige CMP certificada integrada ao TCF; em 2026, a solução deve operar com TCF v2.3 |
-| Parcialmente concluída na Fase 3 | Fazer GA4 e o futuro AdSense respeitarem o estado de consentimento | GA4 já recebe default negado antes do config; ainda faltam os updates e testes com a CMP real |
+| Concluída localmente em 31/07 | Fazer GA4 respeitar a escolha de Analytics | Default e updates seletivos implementados; aceite, recusa, persistência e revogação testados no navegador |
 | Recomendada | Separar categorias “necessários/funcionais”, “analytics” e “publicidade” | Facilita escolhas granulares e manutenção futura |
 | Pendente no painel | Integrar Consent Mode à CMP | A fundação existe no código, mas a CMP do Google e seus controles ainda não foram configurados/publicados |
 | Recomendada | Oferecer link permanente “Preferências de privacidade” | Permite rever/revogar a decisão |
@@ -183,8 +184,8 @@ Começar com anúncios automáticos desativados oferece maior previsibilidade. A
 ### Pontos positivos verificados
 
 - Onze posts versionados e publicados, todos com `draft: false`, título, descrição e corpo substancial.
-- Dois projetos publicados com título, descrição, estado e repositório.
-- A seção Blog possui metadados próprios em `content/posts/_index.md`; `/posts/` é o índice editorial e já pagina corretamente o 11º artigo.
+- Três projetos publicados com título, descrição, estado, repositório e vínculos editoriais.
+- A seção Blog possui metadados próprios em `content/posts/_index.md`; `/posts/` organiza temas, séries e publicações recentes, enquanto `/posts/arquivo/` lista o acervo.
 - Nenhuma página de teste, `Lorem ipsum`, `TODO` ou rascunho publicado foi detectada.
 - Nenhum conteúdo duplicado exato foi identificado na inspeção.
 - O build não emitiu erros e não há referência interna quebrada no HTML produzido.
@@ -229,7 +230,7 @@ Recomenda-se manter uma varredura de segredos na CI e revisar capturas de tela a
 ### Evidências
 
 - Build total: aproximadamente 2,9 MB.
-- Build: 109 páginas, uma página de paginação, 31 arquivos estáticos e nenhum erro.
+- Build: 160 páginas, uma página de paginação, 32 arquivos estáticos e nenhum erro.
 - Maior imagem: aproximadamente 101 KB; não há imagem individual excessiva.
 - CSS final: aproximadamente 25 KB.
 - JavaScript de busca: aproximadamente 18 KB, carregado somente na busca.
@@ -242,14 +243,14 @@ O site atual é leve. O AdSense provavelmente se tornará o maior componente de 
 
 ## Bloqueadores para solicitar AdSense
 
-1. **CMP certificada e mensagem ainda não configuradas/publicadas**: a fundação local não coleta escolhas nem produz updates por conta própria.
-2. **Fluxo completo ainda não validado com escolha real**: aceite, recusa, alteração e revogação precisam ser verificados com Tag Assistant após a publicação da CMP.
+1. **CMP certificada/TCF ainda não configurada no painel**: a interface global controla Consent Mode, mas não gera a TC String exigida para publicidade europeia.
+2. **Validação externa ainda pendente**: o fluxo local passou nos testes de navegador; resta revalidar o deploy no Tag Assistant e, futuramente, a integração TCF.
 
-Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado foram corrigidos na Fase 1. A Política de Privacidade, a seção de cookies, a transparência e o link institucional foram concluídos na Fase 2. Na Fase 3, a fundação do Consent Mode, a ordem do GA4, DNT e a separação de ambientes foram concluídos no código; a integração externa com a CMP continua pendente.
+Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado foram corrigidos na Fase 1. A Política de Privacidade, a seção de cookies, a transparência e o link institucional foram concluídos na Fase 2. A fundação do Consent Mode, a ordem do GA4, DNT e a separação de ambientes foram concluídos na Fase 3. Em 31/07, a mensagem global, a persistência, os updates e a revogação foram implementados; a integração externa com a CMP certificada/TCF continua pendente.
 
 ## Melhorias recomendadas
 
-1. Adicionar um link de preferências de privacidade ao rodapé quando a CMP publicada oferecer esse recurso.
+1. Manter o link de preferências de privacidade já publicado no rodapé e revalidá-lo após integrar a CMP certificada.
 2. Adicionar à CI o build e um verificador de links/arquivos referenciados.
 3. Avaliar hospedar a fonte localmente para reduzir terceiros; é opcional.
 
@@ -265,9 +266,9 @@ Os favicons, as taxonomias, o `.gitignore` e o `noindex` da página Obrigado for
 
 ## Próximos passos
 
-1. Configurar a CMP no Google AdSense Privacy & messaging, habilitar os sinais de Consent Mode e publicar a mensagem aplicável.
-2. Validar no Tag Assistant default, aceite, recusa, alteração, revogação, DNT e ausência de duplicidade.
-3. Revisar a Política de Privacidade para refletir a CMP efetivamente publicada e disponibilizar preferências/revogação.
+1. Publicar o código atual e validar no Tag Assistant default, aceite, recusa, alteração, revogação, DNT e ausência de duplicidade.
+2. Configurar a CMP certificada no Google AdSense Privacy & messaging e planejar sua convivência regional sem mensagens duplicadas.
+3. Validar a TC String e os sinais de publicidade antes de ativar qualquer script ou unidade de anúncio.
 4. Implementar a configuração e os partials de exibição do AdSense, ainda com `enabled: false`; a meta de conexão já está separada desse fluxo.
 5. Validar em ambiente de produção controlado que não há script/ad request em páginas excluídas nem em desenvolvimento.
 6. Ativar inicialmente uma única unidade responsiva ao final dos posts e acompanhar experiência e métricas antes de expandir.

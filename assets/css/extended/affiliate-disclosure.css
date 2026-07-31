@@ -1,0 +1,34 @@
+.affiliate-disclosure {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  color: var(--primary);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-inline-start: 0.25rem solid var(--secondary);
+  border-radius: var(--radius);
+  line-height: 1.6;
+}
+
+.affiliate-disclosure p {
+  margin: 0;
+}
+
+.affiliate-disclosure a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.affiliate-link-label {
+  display: block;
+  margin: 0.75rem 0 0.25rem;
+  color: var(--secondary);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .affiliate-disclosure {
+    padding: 0.875rem 1rem;
+  }
+}
