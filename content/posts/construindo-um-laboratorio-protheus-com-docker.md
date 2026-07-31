@@ -10,8 +10,9 @@ tags:
   - devops
   - postgresql
   - totvs
-categories:
-  - Projetos & Labs
+topics:
+  - Protheus e AdvPL
+  - DevOps e Confiabilidade
 description: "Montagem de um laboratório Protheus com Docker Compose, PostgreSQL, DBAccess, AppServer e License Server, com foco em ambiente reproduzível e práticas DevOps."
 ---
 

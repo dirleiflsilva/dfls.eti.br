@@ -10,8 +10,11 @@ tags:
   - sql
   - returning
   - sql-da-semana
-categories:
+topics:
+  - PostgreSQL e SQL
+series:
   - SQL da Semana
+series_order: 1
 ---
 
 Ao inserir um registro no PostgreSQL, é comum precisar do identificador

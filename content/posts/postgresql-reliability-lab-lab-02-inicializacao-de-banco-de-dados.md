@@ -10,8 +10,12 @@ tags:
   - dbre
   - docker
   - devops
-categories:
-  - Projetos & Labs
+topics:
+  - PostgreSQL e SQL
+  - DevOps e Confiabilidade
+series:
+  - PostgreSQL Reliability Lab
+series_order: 2
 description: "Evoluindo um PostgreSQL reproduzível para uma base realista, com roles, schemas, extensões, modelo de e-commerce e carga de dados automatizada."
 ---
 

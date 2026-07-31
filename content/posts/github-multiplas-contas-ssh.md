@@ -8,9 +8,8 @@ tags:
   - ssh
   - linux
   - devops
-categories:
-  - desenvolvimento
-  - ferramentas
+topics:
+  - Engenharia de Software
 description: "Guia completo para configurar múltiplas contas GitHub usando SSH e aliases no arquivo ~/.ssh/config."
 toc: true
 ---

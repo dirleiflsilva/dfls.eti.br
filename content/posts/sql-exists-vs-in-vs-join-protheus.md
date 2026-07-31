@@ -8,9 +8,9 @@ tags:
   - banco de dados
   - advpl
   - protheus
-categories:
-  - sql
-  - banco de dados
+topics:
+  - PostgreSQL e SQL
+  - Protheus e AdvPL
 description: "Entenda as diferenças entre EXISTS, IN e JOIN no SQL e saiba quando usar cada abordagem em consultas com grandes volumes de dados no Protheus."
 toc: true
 ---

@@ -11,9 +11,9 @@ tags:
   - protheus
   - docker
   - automacao
-categories:
-  - DevOps
-  - Projetos & Labs
+topics:
+  - DevOps e Confiabilidade
+  - Protheus e AdvPL
 ---
 
 Durante muito tempo, enxerguei DevOps como algo distante da minha realidade.

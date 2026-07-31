@@ -11,8 +11,11 @@ tags:
   - filter
   - agregações
   - sql-da-semana
-categories:
+topics:
+  - PostgreSQL e SQL
+series:
   - SQL da Semana
+series_order: 2
 ---
 
 Em relatórios SQL, é comum precisarmos calcular diferentes totais a partir do mesmo conjunto de dados.

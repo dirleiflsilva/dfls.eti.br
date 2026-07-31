@@ -11,9 +11,9 @@ tags:
   - database
   - dba
   - engenharia de dados
-categories:
-  - PostgreSQL
-  - Banco de Dados
+topics:
+  - PostgreSQL e SQL
+  - DevOps e Confiabilidade
 ---
 
 ## O ponto de partida

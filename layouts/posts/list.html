@@ -1,0 +1,92 @@
+{{- define "main" }}
+
+{{- $posts := .RegularPages.ByDate.Reverse }}
+
+<header class="page-header blog-header">
+  {{- partial "breadcrumbs.html" . }}
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}
+  <div class="post-description">{{ . | markdownify }}</div>
+  {{- end }}
+</header>
+
+<form class="blog-search" action="{{ "/search/" | relLangURL }}" method="get" role="search">
+  <label class="sr-only" for="blog-search-input">Buscar no blog</label>
+  <input id="blog-search-input" name="q" type="search" placeholder="Buscar artigos..." autocomplete="off" maxlength="64">
+  <button type="submit">Buscar</button>
+</form>
+
+{{- with site.Taxonomies.topics }}
+<section class="blog-index-section" aria-labelledby="topics-title">
+  <div class="blog-section-heading">
+    <div>
+      <p class="blog-section-kicker">Navegue por assunto</p>
+      <h2 id="topics-title">Temas</h2>
+    </div>
+    <a href="{{ "/topics/" | relLangURL }}">Ver todos</a>
+  </div>
+  <div class="blog-taxonomy-grid">
+    {{- range .Alphabetical }}
+    <a class="blog-taxonomy-card" href="{{ .Page.RelPermalink }}">
+      <span class="blog-taxonomy-name">{{ .Page.Title }}</span>
+      {{- with .Page.Description }}<span class="blog-taxonomy-description">{{ . }}</span>{{ end }}
+      <span class="blog-taxonomy-count">{{ .Count }} {{ if eq .Count 1 }}artigo{{ else }}artigos{{ end }}</span>
+    </a>
+    {{- end }}
+  </div>
+</section>
+{{- end }}
+
+{{- with site.Taxonomies.series }}
+<section class="blog-index-section" aria-labelledby="series-title">
+  <div class="blog-section-heading">
+    <div>
+      <p class="blog-section-kicker">Acompanhe em ordem</p>
+      <h2 id="series-title">Séries e trilhas</h2>
+    </div>
+    <a href="{{ "/series/" | relLangURL }}">Ver todas</a>
+  </div>
+  <div class="blog-series-grid">
+    {{- range .Alphabetical }}
+    <a class="blog-series-card" href="{{ .Page.RelPermalink }}">
+      <span class="blog-series-name">{{ .Page.Title }}</span>
+      {{- with .Page.Description }}<span class="blog-taxonomy-description">{{ . }}</span>{{ end }}
+      <span class="blog-taxonomy-count">{{ .Count }} {{ if eq .Count 1 }}parte publicada{{ else }}partes publicadas{{ end }}</span>
+    </a>
+    {{- end }}
+  </div>
+</section>
+{{- end }}
+
+<section class="blog-index-section" aria-labelledby="latest-title">
+  <div class="blog-section-heading">
+    <div>
+      <p class="blog-section-kicker">Publicações recentes</p>
+      <h2 id="latest-title">Últimos artigos</h2>
+    </div>
+    <a href="{{ "/posts/arquivo/" | relLangURL }}">Arquivo completo</a>
+  </div>
+  <div class="blog-latest-list">
+    {{- range first 6 $posts }}
+    <article class="blog-latest-entry">
+      <div class="blog-latest-meta">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
+        {{- with .GetTerms "topics" }}
+        <span aria-hidden="true">·</span>
+        {{- range first 1 . }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+        {{- end }}
+      </div>
+      <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      {{- with .Description }}<p>{{ . | plainify | htmlUnescape }}</p>{{ end }}
+    </article>
+    {{- end }}
+  </div>
+</section>
+
+<nav class="blog-index-footer" aria-label="Outras formas de explorar o blog">
+  <a href="{{ "/posts/arquivo/" | relLangURL }}">Todos os artigos</a>
+  <a href="{{ "/tags/" | relLangURL }}">Todas as tags</a>
+  <a href="{{ "/search/" | relLangURL }}">Busca avançada</a>
+</nav>
+
+{{- end }}

@@ -1,0 +1,19 @@
+{{- $topics := .GetTerms "topics" -}}
+{{- $series := .GetTerms "series" -}}
+{{- if or $topics $series }}
+<div class="post-taxonomy-context">
+  {{- with $topics }}
+  <div>
+    <span>Temas:</span>
+    {{- range $index, $topic := . }}{{ if $index }}, {{ end }}<a href="{{ $topic.RelPermalink }}">{{ $topic.LinkTitle }}</a>{{ end }}
+  </div>
+  {{- end }}
+  {{- with $series }}
+  <div>
+    <span>Série:</span>
+    {{- range $index, $item := . }}{{ if $index }}, {{ end }}<a href="{{ $item.RelPermalink }}">{{ $item.LinkTitle }}</a>{{ end }}
+    {{- with $.Params.series_order }} · Parte {{ printf "%02d" . }}{{ end }}
+  </div>
+  {{- end }}
+</div>
+{{- end }}

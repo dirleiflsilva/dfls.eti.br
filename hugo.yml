@@ -125,7 +125,8 @@ menu:
 
 taxonomies:
   tag: tags
-  category: categories
+  topic: topics
+  series: series
 
 markup:
   highlight:
@@ -137,7 +138,7 @@ related:
   indices:
     - name: tags
       weight: 100
-    - name: categories
+    - name: topics
       weight: 80
     - name: date
       weight: 10

@@ -11,8 +11,8 @@ tags:
   - laboratórios
   - aprendizado
   - portfólio
-categories:
-  - Diário de Engenharia
+topics:
+  - Carreira e Aprendizado
 ---
 
 Durante muito tempo, estudar uma tecnologia significava assistir a aulas, realizar alguns exercícios e, eventualmente, guardar pequenos exemplos em uma pasta que dificilmente seria consultada novamente.

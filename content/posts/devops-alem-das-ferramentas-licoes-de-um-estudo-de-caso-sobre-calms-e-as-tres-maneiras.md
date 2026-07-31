@@ -11,9 +11,8 @@ tags:
   - sre
   - dbre
   - engenharia de software
-categories:
-  - DevOps
-  - Projetos & Labs
+topics:
+  - DevOps e Confiabilidade
 ---
 
 Recentemente, participei de um desafio do curso de DevOps da Rocketseat. O objetivo era analisar o cenário de uma empresa fictícia e propor melhorias com base no modelo **CALMS** e nas **Três Maneiras do DevOps**.

@@ -11,8 +11,11 @@ tags:
   - distinct-on
   - data-platform
   - sql-da-semana
-categories:
+topics:
+  - PostgreSQL e SQL
+series:
   - SQL da Semana
+series_order: 3
 ---
 
 Em plataformas de dados, é comum armazenarmos o histórico de execuções de cada pipeline.

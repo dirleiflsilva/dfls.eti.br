@@ -11,8 +11,9 @@ tags:
   - engenharia de software
   - código legado
   - arquitetura
-categories:
-  - Engenharia de Software com AdvPL
+topics:
+  - Protheus e AdvPL
+  - Engenharia de Software
 ---
 
 AdvPL é frequentemente associado a código legado.

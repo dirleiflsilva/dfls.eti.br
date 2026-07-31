@@ -13,8 +13,8 @@ tags:
   - GitHub Actions
   - DevOps
   - Engenharia de Software
-categories:
-  - Python
+topics:
+  - Engenharia de Software
 ---
 
 Ao iniciar um projeto com determinadas tecnologias, é comum encontrarmos uma ferramenta capaz de criar automaticamente uma estrutura básica de aplicação.

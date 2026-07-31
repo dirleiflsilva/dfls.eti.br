@@ -12,9 +12,9 @@ tags:
   - dbaccess
   - windows
   - banco-de-dados
-categories:
-  - PostgreSQL
-  - Protheus
+topics:
+  - PostgreSQL e SQL
+  - Protheus e AdvPL
 ---
 
 Instalar PostgreSQL no Windows para um ambiente de desenvolvimento com Protheus não é apenas questão de executar um instalador. É necessário configurar o banco corretamente para que a integração com DBAccess funcione de forma estável e previsível.

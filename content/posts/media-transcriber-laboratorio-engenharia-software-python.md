@@ -12,8 +12,8 @@ tags:
   - arquitetura
   - gitlab
   - ci-cd
-categories:
-  - Projetos & Labs
+topics:
+  - Engenharia de Software
 ---
 
 Alguns projetos começam com um planejamento detalhado. Outros surgem de uma necessidade simples, recebem algumas linhas de código e acabam esquecidos em algum repositório.

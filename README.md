@@ -21,7 +21,9 @@ Saída em: `public/`
 ## Estrutura principal
 
 - `hugo.yml`: configuração central do site, tema, menus, integrações, taxonomias e recursos do PaperMod
-- `content/posts/`: posts do blog
+- `content/posts/`: posts do blog, mantidos em uma única pasta e organizados por metadados
+- `content/topics/`: descrições dos temas editoriais e aliases das categorias antigas
+- `content/series/`: descrições das séries publicadas
 - `content/projects/`: páginas de projetos e labs
 - `content/about/_index.md`: página Sobre
 - `content/contact/`: página de contato e página de obrigado
@@ -97,6 +99,26 @@ outputs:
 
 A página fica em `content/search.md` com layout `search`, usando a busca local do PaperMod baseada em índice JSON/Fuse.
 
+### Organização e índice do blog
+
+A página `/posts/` funciona como índice editorial e oferece navegação por:
+
+- cinco temas principais em `/topics/`
+- séries ordenadas em `/series/`
+- artigos recentes
+- arquivo cronológico completo em `/posts/arquivo/`
+- tags e busca local
+
+Os arquivos Markdown continuam diretamente em `content/posts/`. A organização é feita no front matter com `topics`, `series`, `series_order` e `tags`. Categorias antigas possuem aliases para as novas páginas, preservando os links existentes durante a transição.
+
+Os temas editoriais atuais são:
+
+- PostgreSQL e SQL
+- Protheus e AdvPL
+- DevOps e Confiabilidade
+- Engenharia de Software
+- Carreira e Aprendizado
+
 ### Posts relacionados
 
 Posts relacionados estão habilitados por `ShowRelatedPosts: true` e renderizados por `layouts/partials/related_posts.html`.
@@ -104,7 +126,7 @@ Posts relacionados estão habilitados por `ShowRelatedPosts: true` e renderizado
 A relação é calculada pelo Hugo com os pesos definidos em `related`:
 
 - `tags`: peso 100
-- `categories`: peso 80
+- `topics`: peso 80
 - `date`: peso 10
 
 São exibidos até 5 posts relacionados.
@@ -126,7 +148,7 @@ Isso evita carregar a biblioteca em páginas que não usam diagramas.
 
 A home usa `homeInfoParams` do PaperMod e scripts de partículas carregados apenas na página inicial por `layouts/partials/extend_footer.html`.
 
-`params.mainSections` permanece vazio de forma intencional. Isso mantém a home como apresentação profissional, sem duplicar nela a listagem disponível em `/posts/`. A seção Blog possui metadados próprios em `content/posts/_index.md` e também serve como base para um futuro arquivo cronológico exclusivo de posts.
+`params.mainSections` permanece vazio de forma intencional. Isso mantém a home como apresentação profissional, sem duplicar nela o índice editorial disponível em `/posts/`. O arquivo cronológico exclusivo dos artigos fica em `/posts/arquivo/`.
 
 O menu principal aponta para:
 
@@ -144,7 +166,7 @@ O menu principal aponta para:
 - saída JSON habilitada para busca
 - minificação de saída habilitada em produção
 - metadados de título, descrição, autor e palavras-chave configurados em `params`
-- taxonomias de `tags` e `categories`
+- taxonomias de `tags`, `topics` e `series`
 - arquivo `static/CNAME` para domínio customizado
 
 ### Internacionalização
@@ -168,8 +190,11 @@ description: "Resumo curto usado em listagens e metadados."
 tags:
   - postgresql
   - protheus
-categories:
-  - Banco de Dados
+topics:
+  - PostgreSQL e SQL
+series:
+  - PostgreSQL Reliability Lab
+series_order: 3
 ---
 ```
 
@@ -178,7 +203,10 @@ Campos úteis:
 - `draft`: controla publicação
 - `toc`: permite controlar o sumário por post
 - `description`: melhora listagem, SEO e compartilhamento
-- `tags` e `categories`: alimentam taxonomias e posts relacionados
+- `topics`: um ou mais temas editoriais da lista controlada
+- `series`: nome da série, somente quando o post pertence a uma sequência
+- `series_order`: posição do post dentro da série
+- `tags`: assuntos específicos que alimentam a navegação e os posts relacionados
 - `disableShare: true`: desativa botões de compartilhamento em um post específico
 - `showrelatedposts: false`: desativa posts relacionados em um post específico
 - `comments: false`: desativa comentários em uma página específica

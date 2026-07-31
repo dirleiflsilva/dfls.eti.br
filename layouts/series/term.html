@@ -1,0 +1,23 @@
+{{- define "main" }}
+
+<header class="page-header">
+  {{- partial "breadcrumbs.html" . }}
+  <p class="blog-section-kicker">Série</p>
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}<div class="post-description">{{ . | markdownify }}</div>{{ end }}
+</header>
+
+<ol class="series-post-list">
+  {{- range .Pages.ByParam "series_order" }}
+  <li class="series-post-entry">
+    <span class="series-post-number">{{ printf "%02d" (.Param "series_order") }}</span>
+    <div>
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      {{- with .Description }}<p>{{ . | plainify | htmlUnescape }}</p>{{ end }}
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
+    </div>
+  </li>
+  {{- end }}
+</ol>
+
+{{- end }}

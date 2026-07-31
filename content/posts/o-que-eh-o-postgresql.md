@@ -3,9 +3,8 @@ title: "PostgreSQL: origem, evolução e quem está por trás de um dos bancos o
 date: 2026-03-23
 draft: false
 toc: true
-categories:
-  - PostgreSQL
-  - Banco de Dados
+topics:
+  - PostgreSQL e SQL
 tags:
   - postgresql
   - banco de dados

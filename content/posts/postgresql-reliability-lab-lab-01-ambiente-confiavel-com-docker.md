@@ -12,8 +12,12 @@ tags:
   - database
   - data-engineering
   - devops
-categories:
-  - Projetos & Labs
+topics:
+  - PostgreSQL e SQL
+  - DevOps e Confiabilidade
+series:
+  - PostgreSQL Reliability Lab
+series_order: 1
 description: "Construindo um ambiente PostgreSQL reproduzível e confiável com Docker, com foco em boas práticas próximas de produção."
 ---
 

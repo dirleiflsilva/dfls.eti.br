@@ -3,9 +3,8 @@ title: "DBOrderNickname no Protheus: um recurso pouco conhecido do AdvPL"
 date: 2026-03-15
 draft: false
 toc: true
-categories:
-  - Protheus
-  - AdvPL
+topics:
+  - Protheus e AdvPL
 tags:
   - advpl
   - protheus

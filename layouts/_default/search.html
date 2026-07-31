@@ -1,0 +1,35 @@
+{{- define "main" }}
+
+<header class="page-header">
+  <h1>{{ printf "%s&nbsp;" .Title | htmlUnescape }}
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  </h1>
+  {{- with .Description }}<div class="post-description">{{ . }}</div>{{ end }}
+</header>
+
+<div id="searchbox">
+  <input id="searchInput" autofocus placeholder="{{ .Params.placeholder | default (printf "%s ↵" .Title) }}"
+    aria-label="Buscar" type="search" autocomplete="off" maxlength="64">
+  <ul id="searchResults" aria-label="Resultados da busca"></ul>
+</div>
+
+<script>
+  window.addEventListener("load", function () {
+    const query = new URLSearchParams(window.location.search).get("q");
+    const input = document.getElementById("searchInput");
+    if (!query || !input) return;
+
+    input.value = query;
+    [100, 300, 700].forEach(function (delay) {
+      window.setTimeout(function () {
+        input.dispatchEvent(new KeyboardEvent("keyup", { key: query.slice(-1) }));
+      }, delay);
+    });
+  });
+</script>
+
+{{- end }}
