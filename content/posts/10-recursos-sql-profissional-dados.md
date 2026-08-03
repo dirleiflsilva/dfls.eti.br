@@ -1,8 +1,9 @@
 ---
-title: "10 recursos de SQL que todo profissional de dados deveria dominar"
+title: "10 recursos de SQL no PostgreSQL que todo profissional de dados deveria dominar"
 date: 2026-08-03
-draft: true
+draft: false
 toc: true
+affiliate: true
 slug: "10-recursos-sql-profissional-dados"
 description: "De CTEs e Window Functions a planos de execução e controle de concorrência: dez recursos de SQL para resolver problemas de dados com mais clareza e segurança."
 tags:
@@ -55,7 +56,7 @@ SELECT
     valor,
     sum(valor) OVER (
         PARTITION BY vendedor_id
-        ORDER BY data_venda
+        ORDER BY data_venda, id
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
     ) AS acumulado
 FROM vendas;
@@ -89,10 +90,10 @@ SELECT DISTINCT ON (pipeline)
     status,
     finalizado_em
 FROM execucoes_pipeline
-ORDER BY pipeline, finalizado_em DESC, id DESC;
+ORDER BY pipeline, finalizado_em DESC NULLS LAST, id DESC;
 ```
 
-A ordenação é parte essencial da solução. Sem ela, não existe uma definição determinística de qual linha deve permanecer.
+A ordenação é parte essencial da solução. Sem ela, não existe uma definição determinística de qual linha deve permanecer. Também usamos `NULLS LAST` porque, no PostgreSQL, valores nulos aparecem primeiro por padrão quando a ordenação é decrescente.
 
 O artigo [DISTINCT ON: obtendo o registro mais recente por grupo](/posts/sql-da-semana-03-distinct-on-postgresql/) compara essa abordagem com `row_number()`.
 
@@ -106,7 +107,7 @@ VALUES ('importacao', 'pending')
 RETURNING id, status, created_at;
 ```
 
-Isso evita uma consulta adicional apenas para recuperar um identificador ou conferir os dados gravados. O recurso funciona com `INSERT`, `UPDATE`, `DELETE` e `MERGE`.
+Isso evita uma consulta adicional apenas para recuperar um identificador ou conferir os dados gravados. O recurso funciona com `INSERT`, `UPDATE`, `DELETE` e, desde o PostgreSQL 17, `MERGE`.
 
 Veja o exemplo detalhado em [RETURNING: obtendo dados sem fazer uma nova consulta](/posts/sql-da-semana-01-returning-postgresql/).
 
@@ -139,7 +140,7 @@ LEFT JOIN LATERAL (
     SELECT order_id, created_at
     FROM orders AS o
     WHERE o.customer_id = c.customer_id
-    ORDER BY created_at DESC
+    ORDER BY created_at DESC, order_id DESC
     LIMIT 1
 ) AS ultimo ON true;
 ```
@@ -180,17 +181,24 @@ Transações não servem apenas para agrupar comandos. Elas definem o que cada o
 ```sql
 BEGIN;
 
-SELECT id, status
-FROM jobs
-WHERE status = 'pending'
-ORDER BY created_at
-FOR UPDATE SKIP LOCKED
-LIMIT 1;
-
--- processar e atualizar o job selecionado
+WITH proximo_job AS (
+    SELECT id
+    FROM jobs
+    WHERE status = 'pending'
+    ORDER BY created_at, id
+    FOR UPDATE SKIP LOCKED
+    LIMIT 1
+)
+UPDATE jobs AS j
+SET status = 'processing'
+FROM proximo_job
+WHERE j.id = proximo_job.id
+RETURNING j.id, j.status;
 
 COMMIT;
 ```
+
+A atualização que reserva o job precisa ocorrer na mesma transação do `SELECT`. Depois do `COMMIT`, o processamento pode continuar sem manter o bloqueio aberto por toda a duração do trabalho.
 
 Conhecer isolamento, locks, deadlocks, `FOR UPDATE`, `NOWAIT` e `SKIP LOCKED` ajuda a evitar duplicidade de processamento e inconsistências que não aparecem em testes com um único usuário.
 
@@ -207,10 +215,27 @@ Uma boa sequência é combinar leitura e experimento:
 
 O objetivo não é usar sintaxe avançada em toda consulta. É reconhecer quando um recurso expressa o problema com mais clareza, segurança ou eficiência.
 
+## Para aprofundar
+
+Estes dois livros complementam os recursos apresentados no artigo, partindo de aplicações práticas da linguagem até técnicas voltadas à análise de dados.
+
+{{< book
+    title="SQL Guia Prático"
+    authors="Alice Zhao"
+    description="Uma referência de consulta para o uso cotidiano de SQL, com exemplos aplicáveis a PostgreSQL e a outros bancos de dados relacionais."
+    url="https://link.amazon/B04VLHPbD"
+>}}
+
+{{< book
+    title="SQL para Análise de Dados"
+    authors="Cathy Tanimura"
+    description="Aprofunda o uso de SQL em preparação de dados, séries temporais, análise de coortes, detecção de anomalias e experimentos."
+    url="https://link.amazon/B09clodH6"
+>}}
+
 ## Referências
 
 - [Documentação do PostgreSQL: consultas](https://www.postgresql.org/docs/current/queries.html)
 - [Documentação do PostgreSQL: funções de janela](https://www.postgresql.org/docs/current/functions-window.html)
 - [Documentação do PostgreSQL: uso de EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html)
 - [Documentação do PostgreSQL: controle de concorrência](https://www.postgresql.org/docs/current/mvcc.html)
-
