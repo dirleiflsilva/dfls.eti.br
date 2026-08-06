@@ -1,10 +1,10 @@
 ---
 title: "SQL da Semana #04 — UPSERT: inserindo ou atualizando com segurança"
 date: 2026-08-06
-draft: true
+draft: false
 toc: true
 slug: "sql-da-semana-04-upsert-postgresql"
-description: "Aprenda a usar INSERT ON CONFLICT no PostgreSQL para criar operações idempotentes e tratar conflitos de unicidade com segurança."
+description: "Aprenda a usar INSERT ON CONFLICT no PostgreSQL para realizar inserções ou atualizações de forma atômica e tratar conflitos de unicidade com segurança."
 tags:
   - postgresql
   - sql
@@ -89,6 +89,8 @@ Essa forma é adequada quando a primeira gravação deve prevalecer.
 
 Se o novo evento representa um estado mais recente, podemos atualizar a linha existente:
 
+Neste exemplo, partimos da premissa de que os eventos chegam na ordem correta ou de que o produtor garante que o estado recebido é mais recente. Se houver possibilidade de eventos fora de ordem, o modelo precisa armazenar um timestamp ou número de sequência do evento, e o `DO UPDATE` deve comparar esse valor antes de substituir o estado atual.
+
 ```sql
 INSERT INTO pipeline_status (
     pipeline,
@@ -166,11 +168,13 @@ RETURNING
 
 A aplicação recebe o estado final sem precisar executar outra consulta. Esse uso complementa o primeiro artigo da série, sobre [`RETURNING`](/posts/sql-da-semana-01-returning-postgresql/).
 
+Existe uma ressalva ao combinar `RETURNING` com a condição apresentada na seção anterior: se houver conflito, mas o `WHERE` do `DO UPDATE` for falso, nenhuma linha será atualizada e, portanto, nenhuma linha será retornada.
+
 ## A restrição é parte da solução
 
 O banco precisa saber o que constitui um conflito. Normalmente isso vem de uma chave primária, restrição `UNIQUE` ou índice único compatível.
 
-Sem uma regra de unicidade correta, o upsert não garante idempotência:
+Sem uma regra de unicidade correta, o upsert não identifica o conflito esperado e pode criar registros duplicados:
 
 ```sql
 CONSTRAINT pipeline_status_uk
@@ -196,9 +200,11 @@ Uma violação de unicidade pode revelar um erro de modelagem ou um dado inesper
 
 Evite substituir todas as colunas sem necessidade. Identificadores, datas de criação e valores imutáveis normalmente não devem ser regravados.
 
-### Idempotência exige uma chave adequada
+### Reprocessamentos exigem uma identidade estável
 
-Repetir o mesmo comando com segurança depende de uma identidade estável. Se cada retry gerar uma chave diferente, `ON CONFLICT` não reconhecerá a duplicidade.
+Reconhecer uma repetição depende de uma identidade estável. Se cada retry gerar uma chave diferente, `ON CONFLICT` não reconhecerá a duplicidade.
+
+Isso não torna todo upsert idempotente por si só. Neste exemplo, cada `DO UPDATE` executado incrementa `attempts` e altera `updated_at`; portanto, repetir o comando produz um novo estado. Quando a operação precisar ser realmente idempotente, a ação executada no conflito também deve produzir o mesmo resultado em todas as repetições.
 
 ### Observe triggers e volume de escrita
 
@@ -220,4 +226,3 @@ O recurso concentra a decisão no banco e elimina a separação insegura entre "
 ## Referência
 
 - [PostgreSQL: INSERT e ON CONFLICT](https://www.postgresql.org/docs/current/sql-insert.html)
-
