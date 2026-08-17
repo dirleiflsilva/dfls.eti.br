@@ -1,7 +1,7 @@
 ---
 title: "PostgreSQL Reliability Lab - Lab 03: Backup não basta — restore, WAL archiving e PITR"
-date: 2026-08-10
-draft: true
+date: 2026-08-17
+draft: false
 toc: true
 slug: "postgresql-reliability-lab-lab-03-backup-restore-pitr"
 description: "Evoluindo o PostgreSQL Reliability Lab com backup lógico, backup físico, WAL archiving, restore validado e recuperação point-in-time."
@@ -21,8 +21,6 @@ series:
 series_order: 3
 ---
 
-> **Rascunho condicionado ao gate técnico:** o Lab 03 ainda precisa ser implementado, testado, documentado e publicado no repositório. Comandos, nomes de serviços, tempos e evidências abaixo devem ser conferidos no ambiente definitivo antes da publicação.
-
 No [Lab 02 do PostgreSQL Reliability Lab](/posts/postgresql-reliability-lab-lab-02-inicializacao-de-banco-de-dados/), criamos uma base reproduzível com roles, schemas, extensões, tabelas relacionadas e dados suficientes para exercitar cenários operacionais.
 
 Essa base tornou possível fazer uma pergunta mais importante do que "temos backup?":
@@ -31,25 +29,25 @@ Essa base tornou possível fazer uma pergunta mais importante do que "temos back
 
 Um arquivo de backup que nunca foi restaurado é apenas uma expectativa. Confiabilidade exige procedimento, evidência e conhecimento dos limites de recuperação.
 
-Esse é o objetivo do Lab 03.
+Esse é o objetivo do [Lab 03: Backup & Restore](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/main/labs/03-backup-restore).
 
 ## Objetivo
 
-O laboratório deve demonstrar quatro capacidades:
+O laboratório demonstra quatro capacidades:
 
 - gerar e restaurar um backup lógico;
 - gerar e restaurar uma cópia física do cluster;
 - arquivar continuamente os segmentos de WAL;
 - recuperar o banco até um instante anterior a uma falha simulada.
 
-O resultado não será apenas um conjunto de comandos. O lab deverá produzir validações que respondam:
+O resultado não é apenas um conjunto de comandos. Os scripts produzem validações que respondem:
 
 - o backup terminou com sucesso?
 - o arquivo está legível?
 - o restore inicia em uma instância limpa?
-- as roles e os objetos esperados foram recuperados?
+- as roles, os objetos, os privilégios e os dados esperados foram recuperados?
 - o ponto de recuperação foi respeitado?
-- quanto tempo cada etapa levou no ambiente do lab?
+- o mesmo procedimento pode ser repetido sem aceitar artefatos incompletos?
 
 ## Backup e recuperação não são a mesma coisa
 
@@ -60,121 +58,128 @@ Duas medidas ajudam a deixar isso concreto:
 - **RPO**, ou Recovery Point Objective: quanto dado podemos admitir perder;
 - **RTO**, ou Recovery Time Objective: quanto tempo podemos levar para restabelecer o serviço.
 
-Um `pg_dump` gerado uma vez por dia pode ser suficiente para um ambiente que aceita perder quase 24 horas de alterações. Ele não atende sozinho um sistema cujo RPO é de poucos minutos.
+Um `pg_dump` gerado uma vez por dia pode ser suficiente para um ambiente que aceita perder quase 24 horas de alterações. Ele não atende sozinho um sistema cujo RPO é de poucos minutos. O artigo [Backup lógico vs. backup físico no PostgreSQL](/posts/backup-logico-vs-backup-fisico-postgresql/) detalha as diferenças e os usos das duas abordagens.
 
-No lab, as medições não representarão um SLA de produção. Elas servirão para exercitar o processo e tornar seus custos observáveis.
+Neste lab, o foco é provar a correção e a repetibilidade do processo. Os scripts ainda não instrumentam duração, tamanho ou consumo de recursos; portanto, os resultados não devem ser interpretados como RTO ou benchmark de produção.
 
-## Estrutura prevista
-
-> **TODO após implementação:** substituir a árvore abaixo pela estrutura efetivamente publicada.
+## Estrutura implementada
 
 ```text
 labs/03-backup-restore/
-|-- .env.example
-|-- docker-compose.yml
-|-- config/
-|   `-- postgresql.conf
-|-- scripts/
-|   |-- backup-logical.sh
-|   |-- restore-logical.sh
-|   |-- backup-physical.sh
-|   |-- restore-pitr.sh
-|   `-- check.sh
-|-- backups/
-|-- wal-archive/
-`-- README.md
+├── .env.example
+├── docker-compose.yml
+├── init/
+│   ├── 01_roles.sh
+│   ├── 02_extensions.sql
+│   ├── 03_schemas.sql
+│   ├── 04_tables.sql
+│   ├── 05_seed_procedures.sql
+│   └── 06_load_sample_data.sql
+├── scripts/
+│   ├── _common.sh
+│   ├── archive_wal.sh
+│   ├── backup_logical.sh
+│   ├── restore_logical.sh
+│   ├── backup_physical.sh
+│   ├── restore_physical.sh
+│   ├── pitr_demo.sh
+│   ├── check.sh
+│   ├── test_repetition.sh
+│   ├── validate_restored_db.sql
+│   └── orders_fingerprint.sql
+├── backups/
+└── wal_archive/
 ```
 
-Os artefatos volumosos e dados locais devem permanecer fora do Git. O repositório deve conter scripts, configurações de exemplo e instruções suficientes para reproduzir o cenário.
+Os dumps, backups físicos e segmentos de WAL são gerados localmente e permanecem fora do Git. O repositório contém somente a configuração, os scripts e as instruções necessárias para reproduzir o cenário.
+
+## Preparando o ambiente
+
+O Lab 03 usa PostgreSQL 16 e publica a instância principal na porta `5434`, evitando conflito com os labs anteriores. Depois de clonar o repositório, a preparação começa no diretório do lab:
+
+```bash
+cd labs/03-backup-restore
+cp .env.example .env
+```
+
+As senhas de `postgres` e `backup_user` devem ser substituídas no `.env`. A role de backup recebe o atributo `REPLICATION` durante a primeira inicialização, mas sua credencial não fica fixa nos arquivos versionados.
+
+Os bind mounts precisam permitir que o usuário do PostgreSQL no container grave os artefatos:
+
+```bash
+mkdir -p wal_archive backups/logical backups/physical
+chmod 1733 wal_archive backups/logical backups/physical
+docker compose up -d
+chmod +x scripts/*.sh
+./scripts/check.sh
+```
+
+O modo `1733` é uma solução de compatibilidade para este ambiente local: permite escrita sem liberar a listagem do diretório e usa o sticky bit para restringir remoções. Em produção, o correto é usar storage dedicado, identidade controlada e permissões mais restritivas.
+
+O `check.sh` não se limita ao `pg_isready`. Ele valida roles, schemas, extensões, massa de dados e parâmetros de WAL, força um `pg_switch_wal()` e aguarda o segmento aparecer no archive sem aumentar o contador de falhas do archiver.
 
 ## Parte 1: backup lógico
 
 O backup lógico representa os objetos do banco por meio de comandos e dados que podem ser restaurados pelo PostgreSQL.
 
-Uma execução em formato custom pode seguir esta linha:
+No lab, o fluxo foi encapsulado em dois scripts:
 
 ```bash
-pg_dump \
-  --format=custom \
-  --file=/backups/appdb.dump \
-  --dbname=appdb
+./scripts/backup_logical.sh
+./scripts/restore_logical.sh
 ```
 
-O formato custom permite usar `pg_restore`, selecionar objetos e restaurar em paralelo quando o cenário comporta essa opção.
+O primeiro script executa `pg_dump -Fc` e grava inicialmente um arquivo com sufixo `.partial`. O nome definitivo só aparece depois que o comando termina com sucesso. Assim, uma execução interrompida não se apresenta como um backup válido.
 
-Antes do restore, podemos inspecionar o conteúdo:
+O formato custom permite inspecionar o catálogo com `pg_restore --list`, selecionar objetos e usar recursos específicos do `pg_restore`. É justamente a inspeção do catálogo que inicia o fluxo de recuperação.
 
-```bash
-pg_restore --list /backups/appdb.dump
-```
+O restore ocorre em `appdb_restore`, criado a partir de `template0`, e não sobre o banco que gerou o dump. Antes da restauração, o script verifica se as roles globais necessárias existem; depois, preserva proprietários e ACLs do banco original.
 
-O restore deve acontecer em um banco limpo, não sobre a mesma instância que produziu o arquivo:
+Essa decisão explicita um limite importante: `pg_dump` protege o banco `appdb`, mas não inclui roles nem tablespaces, que são objetos globais do cluster. Em uma migração para um cluster vazio, eles precisam ser criados antes do restore ou protegidos separadamente com `pg_dumpall --globals-only`.
 
-```bash
-createdb appdb_restore
+### O que o restore lógico valida
 
-pg_restore \
-  --exit-on-error \
-  --dbname=appdb_restore \
-  /backups/appdb.dump
-```
+Uma restauração bem-sucedida precisa verificar mais do que contagens. O arquivo `validate_restored_db.sql`, compartilhado pelos três cenários de recuperação, confere:
 
-> **TODO técnico:** decidir e documentar como objetos globais, especialmente roles, serão tratados. `pg_dump` cobre um banco; roles e tablespaces exigem estratégia complementar, como `pg_dumpall --globals-only`.
+- tabelas e volume mínimo esperado;
+- registros sentinela de clientes, produtos e pedidos;
+- coerência entre total do pedido, itens e pagamento;
+- chaves primárias, chaves estrangeiras e índices essenciais;
+- ownership de schemas e tabelas;
+- privilégios de `app_user` e `readonly`.
 
-### Validação prevista
-
-O `check.sh` deve comparar pelo menos:
-
-- schemas existentes;
-- quantidade e estrutura das tabelas;
-- contagens de registros do modelo de e-commerce;
-- constraints e índices essenciais;
-- execução de consultas de referência.
-
-```sql
-SELECT 'app.customers' AS table_name, count(*) FROM app.customers
-UNION ALL
-SELECT 'app.orders', count(*) FROM app.orders
-UNION ALL
-SELECT 'app.order_items', count(*) FROM app.order_items
-ORDER BY table_name;
-```
-
-> **TODO de evidência:** inserir a saída real da validação e o tempo medido de backup e restore.
+Contagens e um fingerprint determinístico de pedidos também são comparados com o banco atual. A diferença entre eles é informativa, não um erro automático: o banco de origem pode ter recebido novas transações depois que o snapshot foi criado.
 
 ## Parte 2: backup físico
 
 Uma cópia física representa os arquivos do cluster PostgreSQL. Ao contrário do backup lógico, ela está ligada à arquitetura e à versão principal do servidor.
 
-O PostgreSQL fornece `pg_basebackup` para criar um backup base de um cluster em execução:
+O PostgreSQL fornece `pg_basebackup` para criar uma cópia consistente de um cluster em execução. No lab, o comando é autenticado como `backup_user`, usa formato plain e inclui WAL por streaming:
 
 ```bash
-pg_basebackup \
-  --host=postgres \
-  --username=backup_user \
-  --pgdata=/backups/base \
-  --format=plain \
-  --wal-method=stream \
-  --progress
+./scripts/backup_physical.sh
+./scripts/restore_physical.sh
 ```
 
-O Lab 02 já criou a role `backup_user`, mas seus privilégios, autenticação e acesso de rede precisam ser revistos no contexto deste lab.
+Assim como no backup lógico, o diretório nasce com o sufixo `.partial` e só recebe o timestamp definitivo depois do sucesso.
 
-> **TODO técnico:** registrar a configuração final de `pg_hba.conf`, os privilégios da role e a forma de fornecer o segredo sem publicá-lo.
+Para validar o resultado, `restore_physical.sh` copia o backup para uma área de trabalho e sobe um container temporário `postgres:16` na porta `5435`. O backup original permanece intacto. O cluster restaurado precisa iniciar, responder ao `pg_isready` e passar pelas mesmas verificações estruturais e de integridade usadas no restore lógico.
+
+Esse isolamento é essencial: iniciar novamente a própria origem não prova que o backup é recuperável.
 
 ## Parte 3: WAL archiving
 
 O Write-Ahead Log registra mudanças antes que elas sejam consolidadas nos arquivos de dados. Ao preservar uma sequência contínua de segmentos de WAL a partir de um backup base, podemos reproduzir alterações posteriores.
 
-A configuração exige, entre outros pontos, habilitar o arquivamento e definir como cada segmento será copiado:
+A configuração do container habilita o arquivamento e delega a publicação dos segmentos a um script dedicado:
 
 ```conf
 wal_level = replica
 archive_mode = on
-archive_command = 'test ! -f /wal-archive/%f && cp %p /wal-archive/%f'
+archive_command = '/usr/local/bin/archive_wal %p %f'
 ```
 
-Esse `archive_command` serve como exemplo de laboratório local. Uma estratégia real precisa considerar armazenamento durável, monitoramento, retenção, criptografia, permissões e falhas no destino.
+O `archive_wal.sh` evita uma fragilidade comum do exemplo baseado apenas em `cp`: ele publica cada arquivo por operação atômica, usa modo `0600`, aceita o reenvio se o conteúdo já arquivado for idêntico e recusa sobrescrever um arquivo de mesmo nome com conteúdo diferente.
 
 O comando deve retornar sucesso somente quando o segmento estiver armazenado corretamente. Se o arquivamento falhar repetidamente, o diretório `pg_wal` pode crescer até consumir o espaço disponível.
 
@@ -189,63 +194,80 @@ SELECT
 FROM pg_stat_archiver;
 ```
 
-> **TODO de evidência:** incluir a consulta executada no lab, a lista dos segmentos arquivados e a validação de que não existem falhas pendentes.
+O `check.sh` usa justamente `pg_stat_archiver` e a presença do arquivo no bind mount para provar que houve arquivamento real, não apenas configuração aparente.
 
 ## Parte 4: recuperação point-in-time
 
-Para testar PITR, precisamos de uma linha do tempo observável:
+O cenário completo está em um único comando:
 
-1. criar o backup base;
-2. registrar um instante ou ponto de restauração;
-3. executar transações válidas;
-4. simular uma alteração destrutiva;
-5. interromper a instância de origem;
-6. restaurar o backup base em outro diretório;
-7. configurar a leitura do arquivo de WAL;
-8. recuperar até antes da alteração destrutiva;
-9. validar os dados e encerrar o modo de recuperação.
-
-Um ponto nomeado ajuda a tornar o exercício reproduzível:
-
-```sql
-SELECT pg_create_restore_point('antes_da_exclusao');
+```bash
+./scripts/pitr_demo.sh
 ```
 
-Depois, simulamos o incidente:
+O script cria um novo backup base e registra um timestamp de referência. Em seguida, simula o incidente dentro de uma única transação:
 
 ```sql
-DELETE FROM app.orders
-WHERE created_at < current_date;
+BEGIN;
+DELETE FROM app.payments;
+DELETE FROM app.order_items;
+DELETE FROM app.orders;
+COMMIT;
 ```
 
-> **Nunca execute um teste destrutivo em um ambiente real sem autorização, isolamento, proteção e plano de recuperação.** Neste lab, a falha deve ocorrer somente em dados descartáveis.
+> **Atenção:** esse script apaga os pedidos, itens e pagamentos do ambiente principal do Lab 03. A destruição é intencional e deve ocorrer somente nessa base descartável.
 
-Na instância restaurada, os parâmetros de recuperação deverão apontar para o arquivo de WAL e para o alvo escolhido:
+Depois da exclusão, o fluxo força a troca do segmento e só avança quando o WAL do incidente aparece no archive. Uma cópia do backup base recebe a configuração de recuperação:
 
 ```conf
-restore_command = 'cp /wal-archive/%f %p'
-recovery_target_name = 'antes_da_exclusao'
+restore_command = 'cp /wal_archive/%f %p'
+recovery_target_time = 'TIMESTAMP_ANTERIOR_AO_INCIDENTE'
 recovery_target_action = 'promote'
 ```
 
-A presença de `recovery.signal` solicita que o PostgreSQL inicie a recuperação a partir dos WALs disponíveis.
+A presença de `recovery.signal` faz o PostgreSQL iniciar em recuperação. O container temporário, publicado na porta `5436`, reproduz os WALs até o timestamp e promove o cluster restaurado.
 
-> **TODO técnico:** substituir este fluxo pela configuração e pelos comandos exatos testados na versão do PostgreSQL usada pelo lab.
+Por fim, o script compara três estados de `app.orders`: antes do incidente, depois da exclusão na origem e depois do PITR. A contagem recuperada precisa coincidir com a original. O fingerprint de pedidos, itens e pagamentos também precisa ser idêntico, impedindo que uma contagem coincidente esconda conteúdo divergente.
 
-## Evidências necessárias antes da publicação
+## Repetibilidade também faz parte da evidência
 
-| Evidência | Estado do rascunho |
+Um procedimento pode funcionar uma vez e ainda ser frágil. Por isso, o lab inclui um teste end-to-end com confirmação explícita:
+
+```bash
+./scripts/test_repetition.sh --destructive
+```
+
+Ele recria o cluster e executa dois ciclos de PITR separados por um reset completo. Também confirma que arquivos `.partial` não são escolhidos como backups válidos e que o restore físico rejeita um timestamp malformado.
+
+O reset precisa limpar o archive e os backups vinculados ao cluster descartado. WALs de clusters diferentes não podem compartilhar o mesmo diretório como se pertencessem a uma única sequência recuperável.
+
+## Evidências da entrega
+
+| Evidência | Implementação |
 |---|---|
-| Commit ou tag do Lab 03 | Pendente |
-| Backup lógico restaurado em banco limpo | Pendente |
-| Backup físico iniciando em instância separada | Pendente |
-| Segmentos de WAL arquivados sem falha | Pendente |
-| Restore point anterior ao incidente alcançado | Pendente |
-| Contagens e consultas de validação | Pendente |
-| Tempos observados de backup e restore | Pendente |
-| Limitações e falhas encontradas | Pendente |
+| Referência técnica | Commit [`c77a490`](https://github.com/dirleiflsilva/postgresql-reliability-lab/commit/c77a4903aa656729a1777e5d2f209f2c1991b632) |
+| Backup lógico | Dump custom, inspeção de catálogo e restore em `appdb_restore` |
+| Backup físico | Cluster iniciado e validado em container temporário |
+| WAL archiving | Troca forçada, contador do archiver e arquivo no archive conferidos |
+| PITR | Recuperação por timestamp anterior ao incidente e promoção automática |
+| Integridade | Estrutura, sentinelas, constraints, índices, ownership, ACLs, totais e fingerprint |
+| Repetibilidade | Dois ciclos de PITR, resets e rejeição de artefatos parciais ou entrada inválida |
+| Medição de tempo | Não instrumentada nesta versão; não há afirmação de RTO |
 
-## O que este lab deve demonstrar
+## O que continua fora do escopo
+
+Este é um laboratório local com mecanismos nativos do PostgreSQL. Ele não implementa:
+
+- armazenamento off-site ou imutável;
+- criptografia e rotação de chaves;
+- política de retenção e expiração;
+- agendamento periódico dos backups e testes de restore;
+- alertas para falhas do archiver ou crescimento de `pg_wal`;
+- paralelismo, compressão e ajuste para grandes volumes;
+- ferramentas dedicadas, como pgBackRest ou Barman.
+
+Essas ausências não invalidam o exercício. Elas delimitam o que foi provado: em um ambiente reproduzível e descartável, os backups lógico e físico podem ser restaurados, e o conjunto backup base mais WAL arquivado consegue recuperar o banco até antes de uma alteração destrutiva.
+
+## O que este lab demonstra
 
 O principal aprendizado não é decorar `pg_dump` ou `pg_basebackup`.
 
@@ -255,9 +277,9 @@ Sem restore testado, não existe evidência suficiente de que o backup resolve o
 
 ## Próximo passo
 
-Depois de proteger e recuperar uma instância isolada, o Lab 04 usará os mesmos fundamentos de WAL para construir uma replica por streaming.
+Depois de proteger e recuperar uma instância isolada, o Lab 04 usará os mesmos fundamentos de WAL para construir uma réplica por streaming.
 
-> **TODO:** inserir o link para `labs/03-backup-restore` depois da publicação do gate técnico.
+O código, os scripts e as instruções completas estão no [diretório do Lab 03 no GitHub](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/main/labs/03-backup-restore).
 
 ## Referências
 
@@ -265,4 +287,3 @@ Depois de proteger e recuperar uma instância isolada, o Lab 04 usará os mesmos
 - [PostgreSQL: backup SQL](https://www.postgresql.org/docs/current/backup-dump.html)
 - [PostgreSQL: backup base](https://www.postgresql.org/docs/current/continuous-archiving.html#BACKUP-BASE-BACKUP)
 - [PostgreSQL: arquivamento contínuo e PITR](https://www.postgresql.org/docs/current/continuous-archiving.html)
-
