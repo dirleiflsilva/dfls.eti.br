@@ -97,8 +97,8 @@
       <footer class="home-project-card__links">
         <a href="{{ .RelPermalink }}">Conheça o projeto</a>
         {{- with .Params.post_links }}
-          {{- with index . 0 }}
-        <a href="{{ .url | relLangURL }}">Leia o artigo relacionado</a>
+          {{- range . }}
+        <a href="{{ .url | relLangURL }}">{{ .label | default "Leia o artigo relacionado" }}</a>
           {{- end }}
         {{- end }}
       </footer>
