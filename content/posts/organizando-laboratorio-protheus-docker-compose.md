@@ -1,7 +1,8 @@
 ---
 title: "Organizando um laboratório Protheus: boas práticas com Docker Compose"
-date: 2026-08-17
-draft: true
+date: 2026-08-19
+lastmod: 2026-08-18
+draft: false
 toc: true
 slug: "organizando-laboratorio-protheus-docker-compose"
 description: "Como organizar serviços, configurações, dependências e volumes de um laboratório Protheus para tornar o Docker Compose mais compreensível e reproduzível."
@@ -20,7 +21,7 @@ series:
 series_order: 2
 ---
 
-> **Rascunho condicionado ao gate técnico:** a organização descrita abaixo parte do estado atual do Protheus Docker Lab, mas o texto só deve ser publicado depois que a versão correspondente estiver testada, documentada e identificada por commit ou tag.
+> **Versão de referência:** este artigo foi revisado com base no commit [`77562cd`](https://github.com/dirleiflsilva/protheus-docker-lab/commit/77562cd19452112e404c4b0f107bebc84803c3b1), que registra o estado validado da segunda parte do Protheus Docker Lab.
 
 No primeiro artigo da série, [Construindo um laboratório Protheus com Docker](/posts/construindo-um-laboratorio-protheus-com-docker/), montei um ambiente de desenvolvimento composto por PostgreSQL, DBAccess, License Server e AppServer.
 
@@ -54,13 +55,18 @@ O projeto foi separado por finalidade:
 
 ```text
 protheus-docker-lab/
+|-- .dockerignore
 |-- .env.example
+|-- .gitignore
 |-- docker-compose.yml
 |-- config/
 |   |-- appserver.ini.example
 |   |-- odbc.ini.example
 |   `-- odbcinst.ini.example
+|-- docs/
+|   `-- anotacoes-laboratorio.md
 |-- files/
+|   `-- .gitkeep
 |-- scripts/
 |   |-- check.sh
 |   |-- generate-dbaccess.sh
@@ -80,11 +86,10 @@ Cada diretório responde a uma pergunta:
 - `scripts/`: como preparar, validar e operar o ambiente?
 - `files/`: onde colocar temporariamente artefatos locais?
 - `volumes/`: quais dados precisam sobreviver ao container?
+- `docs/`: quais evidências, erros e decisões precisam ser preservados?
 - `README.md`: como outra pessoa reproduz o fluxo?
 
-Os artefatos proprietários e arquivos efetivos do ambiente não são publicados no Git.
-
-> **TODO de evidência:** atualizar a árvore com a versão final, registrar o commit e confirmar as regras do `.gitignore`.
+Os artefatos proprietários e arquivos efetivos do ambiente não são publicados no Git. O `.gitignore` mantém fora do repositório o `.env`, os arquivos `.ini` efetivos, o conteúdo de `files/` e os dados de execução em `volumes/`. Arquivos `.gitkeep` preservam apenas a estrutura vazia necessária para orientar a preparação.
 
 ## Serviços com responsabilidades explícitas
 
@@ -106,11 +111,11 @@ Ela não significa isolamento completo. Os serviços continuam formando um únic
 Valores que podem mudar entre máquinas ficam no `.env`:
 
 ```dotenv
-COMPOSE_PROJECT_NAME=protheus-lab
-POSTGRES_IMAGE=...
-DBACCESS_IMAGE=...
-APPSERVER_IMAGE=...
-LICENSE_IMAGE=...
+COMPOSE_PROJECT_NAME=protheus-docker-lab
+LICENSE_IMAGE=totvsengpro/license-dev
+POSTGRES_IMAGE=totvsengpro/postgres-dev:12.1.2510_bra
+DBACCESS_IMAGE=totvsengpro/dbaccess-postgres-dev
+APPSERVER_IMAGE=totvsengpro/appserver-dev
 APPSERVER_PORT=1234
 WEBAPP_PORT=8080
 ```
@@ -130,6 +135,8 @@ config/odbc.ini              -> gerado localmente
 config/odbcinst.ini          -> gerado localmente
 ```
 
+O repositório também mantém exemplos de ODBC para consulta. No fluxo recomendado, entretanto, os três arquivos efetivos do DBAccess e do ODBC são produzidos localmente pelo script e continuam ignorados pelo Git.
+
 O DBAccess merece cuidado especial. A senha precisa ser codificada no formato esperado pela ferramenta `dbaccesscfg`. Editar manualmente o resultado pode produzir um arquivo aparentemente correto, mas inválido para o serviço.
 
 Por isso, o script `generate-dbaccess.sh` executa a ferramenta da própria imagem e gera a configuração efetiva:
@@ -138,7 +145,7 @@ Por isso, o script `generate-dbaccess.sh` executa a ferramenta da própria image
 ./scripts/generate-dbaccess.sh
 ```
 
-> **TODO de validação:** executar o fluxo do zero em uma cópia limpa e incluir a saída sanitizada, sem senha ou valor codificado.
+O script carrega as variáveis do `.env`, executa o `dbaccesscfg` da imagem configurada e grava `dbaccess.ini`, `odbc.ini` e `odbcinst.ini`. Com isso, a senha codificada fica no formato produzido pela própria ferramenta, sem precisar ser copiada ou editada manualmente.
 
 ## Dependência não é prontidão
 
@@ -146,9 +153,7 @@ O PostgreSQL possui um healthcheck:
 
 ```yaml
 healthcheck:
-  test:
-    - CMD-SHELL
-    - pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+  test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost -p ${POSTGRES_PORT}"]
   interval: 5s
   timeout: 3s
   retries: 20
@@ -235,20 +240,22 @@ Com a separação, o ambiente passa a ter:
 - validação antes da execução;
 - documentação conectada à estrutura real.
 
-## Evidências necessárias antes da publicação
+## Evidências da etapa
 
-| Evidência | Estado do rascunho |
+| Evidência | Registro |
 |---|---|
-| Commit ou tag da organização | Pendente |
-| Setup reproduzido a partir de clone limpo | Pendente |
-| `docker compose config` validado | Pendente |
-| Arquivos obrigatórios detectados pelo `check.sh` | Pendente |
-| Quatro serviços iniciados | Pendente |
-| Limitações e correções encontradas | Pendente |
+| Versão de referência | Commit [`77562cd`](https://github.com/dirleiflsilva/protheus-docker-lab/commit/77562cd19452112e404c4b0f107bebc84803c3b1) |
+| Estrutura e arquivos públicos | Árvore do repositório no commit de referência |
+| Validação da configuração | `scripts/check.sh` executa `docker compose config` antes da subida |
+| Arquivos obrigatórios | `check.sh` verifica configurações, RPO, `sx2.unq` e `sxsbra.txt` |
+| Inicialização | `scripts/up.sh` valida, executa `docker compose up -d` e mostra `docker compose ps` |
+| Testes e correções | Registrados em [`docs/anotacoes-laboratorio.md`](https://github.com/dirleiflsilva/protheus-docker-lab/blob/77562cd19452112e404c4b0f107bebc84803c3b1/docs/anotacoes-laboratorio.md) |
+
+As evidências documentam, entre outros pontos, a conexão do DBAccess com PostgreSQL, o carregamento do ambiente `PROTHEUS_DOCKER`, o acesso pelo WebApp e a necessidade de manter `systemload` gravável neste laboratório. Elas também deixam claros os limites do healthcheck e das condições de inicialização usadas pelo Compose.
 
 ## Próximo passo
 
-Organização reduz ambiguidade, mas o processo ainda possui comandos manuais. Na próxima parte, vamos consolidar scripts, validações funcionais e uma interface operacional simples para concluir este primeiro ciclo do Protheus Docker Lab.
+Organização reduz ambiguidade, mas o processo ainda possui comandos manuais. Na próxima parte, vamos consolidar a automação e a configuração local. Dados, manutenção e a validação final do laboratório ficam para as partes seguintes da série.
 
 O repositório do projeto está disponível em:
 
@@ -259,4 +266,4 @@ O repositório do projeto está disponível em:
 - [Docker Docs: Compose](https://docs.docker.com/compose/)
 - [Docker Docs: controle de inicialização no Compose](https://docs.docker.com/compose/how-tos/startup-order/)
 - [Protheus Docker — TOTVS Engineering Pro](https://docker-protheus.engpro.totvs.com.br/)
-
+- [Protheus Docker Lab — commit de referência](https://github.com/dirleiflsilva/protheus-docker-lab/tree/77562cd19452112e404c4b0f107bebc84803c3b1)
