@@ -1,7 +1,7 @@
 ---
 title: "SQL da Semana #05 — CTE: organizando consultas complexas"
-date: 2026-08-13
-draft: true
+date: 2026-08-20
+draft: false
 toc: true
 slug: "sql-da-semana-05-cte-postgresql"
 description: "Aprenda a usar Common Table Expressions com WITH para dividir consultas SQL em etapas nomeadas, legíveis e reutilizáveis."
@@ -40,6 +40,18 @@ CREATE TABLE execucoes_pipeline (
 );
 ```
 
+## Dados para reproduzir o cenário
+
+O [laboratório do episódio 05](https://github.com/dirleiflsilva/sql-da-semana-postgresql/tree/main/episodios/05-cte) contém um conjunto de dados executável com:
+
+- quinze execuções finalizadas nos últimos 30 dias;
+- cinco execuções para cada pipeline;
+- durações e taxas de falha diferentes;
+- uma execução com mais de 30 dias;
+- uma execução recente ainda não finalizada.
+
+Essa composição permite observar tanto os cálculos quanto os filtros da consulta. Os arquivos estão separados em criação das tabelas, carga dos dados e consultas, para que cada etapa possa ser executada manualmente.
+
 Queremos encontrar pipelines que, nos últimos 30 dias:
 
 - tiveram pelo menos cinco execuções finalizadas;
@@ -57,33 +69,36 @@ WITH execucoes_recentes AS (
         status,
         extract(epoch FROM finalizado_em - iniciado_em) AS duracao_segundos
     FROM execucoes_pipeline
-    WHERE iniciado_em >= current_date - interval '30 days'
+    WHERE iniciado_em >= current_timestamp - interval '30 days'
       AND finalizado_em IS NOT NULL
 ),
 metricas_por_pipeline AS (
     SELECT
         pipeline,
-        count(*) AS execucoes,
-        avg(duracao_segundos) AS duracao_media,
-        count(*) FILTER (WHERE status = 'failed')::numeric
-            / count(*) AS taxa_falha
+        count(*) AS total_execucoes,
+        round(avg(duracao_segundos), 2) AS duracao_media,
+        round(
+            100.0 * count(*) FILTER (WHERE status = 'falha') / count(*),
+            2
+        ) AS taxa_falhas_percentual
     FROM execucoes_recentes
     GROUP BY pipeline
 ),
 media_geral AS (
-    SELECT avg(duracao_media) AS duracao_media_geral
-    FROM metricas_por_pipeline
+    SELECT avg(duracao_segundos) AS duracao_media_geral
+    FROM execucoes_recentes
 )
 SELECT
     m.pipeline,
-    m.execucoes,
-    round(m.duracao_media, 2) AS duracao_media_segundos,
-    round(m.taxa_falha * 100, 2) AS taxa_falha_percentual
+    m.total_execucoes,
+    m.duracao_media,
+    m.taxa_falhas_percentual,
+    round(g.duracao_media_geral, 2) AS duracao_media_geral
 FROM metricas_por_pipeline AS m
 CROSS JOIN media_geral AS g
-WHERE m.execucoes >= 5
+WHERE m.total_execucoes >= 5
   AND m.duracao_media > g.duracao_media_geral
-ORDER BY m.duracao_media DESC;
+ORDER BY m.pipeline;
 ```
 
 A consulta pode ser lida como uma sequência:
@@ -92,6 +107,19 @@ A consulta pode ser lida como uma sequência:
 2. calcular métricas por pipeline;
 3. calcular a média geral;
 4. filtrar e apresentar o resultado.
+
+A cláusula [`FILTER`](/posts/sql-da-semana-02-filter-postgresql/), usada para calcular a taxa de falhas, mantém a agregação condicional legível sem repetir expressões `CASE`.
+
+## Resultado esperado
+
+Com os dados do laboratório, a média geral das quinze execuções recentes é de **640 segundos**. A consulta retorna:
+
+| Pipeline | Execuções | Duração média (s) | Taxa de falhas | Média geral (s) |
+|---|---:|---:|---:|---:|
+| `carga-vendas` | 5 | 720,00 | 20,00% | 640,00 |
+| `relatorio` | 5 | 1.020,00 | 20,00% | 640,00 |
+
+O pipeline `backup` possui duração média de 180 segundos e fica abaixo da média geral. A execução com 40 dias e aquela sem horário de término não participam dos cálculos.
 
 ## Uma CTE não cria uma tabela permanente
 
@@ -105,7 +133,7 @@ Isso permite reutilizar um resultado intermediário sem criar tabelas temporári
 
 Muitas CTEs poderiam ser escritas como subconsultas. A escolha deve considerar clareza e plano de execução.
 
-Nas versões atuais do PostgreSQL, uma CTE não recursiva, sem efeitos colaterais e referenciada uma vez pode ser incorporada à consulta principal. Quando ela é materializada, o resultado intermediário é calculado separadamente.
+Nas versões atuais do PostgreSQL, uma CTE não recursiva, sem efeitos colaterais e referenciada uma vez pode ser incorporada à consulta principal. Quando é referenciada mais de uma vez, por padrão seu resultado é calculado separadamente e reutilizado. Esse comportamento evita trabalho duplicado, mas também pode impedir que alguns filtros da consulta principal sejam aplicados diretamente sobre a origem dos dados.
 
 Podemos tornar a intenção explícita em situações específicas:
 
@@ -131,7 +159,7 @@ Essas opções não devem ser aplicadas por regra geral. Compare os planos com `
 
 ## CTEs também podem modificar dados
 
-O `WITH` pode acompanhar comandos de escrita e usar `RETURNING` para encadear operações:
+O `WITH` pode acompanhar comandos de escrita e usar [`RETURNING`](/posts/sql-da-semana-01-returning-postgresql/) para encadear operações:
 
 ```sql
 WITH jobs_finalizados AS (
@@ -146,7 +174,9 @@ SELECT id, pipeline, finalizado_em
 FROM jobs_finalizados;
 ```
 
-Esse tipo de comando exige atenção à semântica e aos efeitos de escrita, mas pode expressar uma operação composta de maneira atômica.
+Esse exemplo encadeia o `UPDATE` e o `INSERT` em uma única instrução SQL, usando o resultado de `RETURNING` como ligação entre as duas operações.
+
+CTEs que modificam dados são executadas uma única vez e compartilham o mesmo snapshot. Quando uma instrução contém várias escritas independentes, a ordem efetiva entre elas é imprevisível; por isso, elas não devem tentar alterar as mesmas linhas. O fluxo de dados deve ser expresso por meio de `RETURNING`, como no exemplo.
 
 ## E as CTEs recursivas?
 
@@ -183,6 +213,30 @@ CTEs funcionam bem quando:
 
 Evite criar dezenas de CTEs pequenas que apenas renomeiam operações triviais. A consulta continua precisando ser compreensível como um todo.
 
+## Pratique no laboratório
+
+O repositório [SQL da Semana — laboratórios PostgreSQL](https://github.com/dirleiflsilva/sql-da-semana-postgresql) fornece um PostgreSQL 16 com Docker Compose, mas não executa os exemplos automaticamente. A criação das tabelas, a carga dos dados e as consultas fazem parte da prática.
+
+Clone o repositório e inicie o banco:
+
+```bash
+git clone https://github.com/dirleiflsilva/sql-da-semana-postgresql.git
+cd sql-da-semana-postgresql
+cp .env.example .env
+docker compose up -d
+docker compose exec postgres psql -U postgres -d sql_da_semana
+```
+
+Dentro do `psql`, execute os arquivos do episódio na ordem:
+
+```text
+\i /sql-da-semana/05-cte/01-tabelas.sql
+\i /sql-da-semana/05-cte/02-dados.sql
+\i /sql-da-semana/05-cte/03-consultas.sql
+```
+
+Quem quiser entender a preparação do ambiente pode consultar o artigo [PostgreSQL Reliability Lab — Ambiente confiável com Docker](/posts/postgresql-reliability-lab-lab-01-ambiente-confiavel-com-docker/). Para uma instalação nativa, há também o guia de [configuração do PostgreSQL no Windows](/posts/configurando-postgresql-windows-protheus-desenvolvimento/).
+
 ## Conclusão
 
 CTEs ajudam a escrever SQL como uma sequência de transformações nomeadas.
@@ -192,4 +246,3 @@ O principal benefício é tornar o raciocínio mais explícito. O impacto no des
 ## Referência
 
 - [PostgreSQL: consultas WITH e Common Table Expressions](https://www.postgresql.org/docs/current/queries-with.html)
-
