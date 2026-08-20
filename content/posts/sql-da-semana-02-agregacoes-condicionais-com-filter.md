@@ -1,6 +1,7 @@
 ---
 title: "SQL da Semana #02 — FILTER: agregações condicionais mais claras"
 date: 2026-07-23
+lastmod: 2026-08-20
 draft: false
 toc: true
 slug: "sql-da-semana-02-filter-postgresql"
@@ -251,6 +252,20 @@ Ele não elimina todos os usos de `CASE`.
 Quando a transformação precisa ocorrer dentro da própria expressão, ou quando cada condição deve retornar valores diferentes, `CASE` continua sendo adequado.
 
 Mas, quando a necessidade é simplesmente restringir quais linhas participam de uma agregação, `FILTER` costuma expressar melhor a intenção.
+
+## Pratique no laboratório
+
+O [laboratório do episódio 02](https://github.com/dirleiflsilva/sql-da-semana-postgresql/tree/main/episodios/02-filter) contém oito pedidos distribuídos entre três clientes e três estados.
+
+Depois de preparar o PostgreSQL conforme o [README do repositório](https://github.com/dirleiflsilva/sql-da-semana-postgresql), execute no `psql`:
+
+```text
+\i /sql-da-semana/02-filter/01-tabelas.sql
+\i /sql-da-semana/02-filter/02-dados.sql
+\i /sql-da-semana/02-filter/03-consultas.sql
+```
+
+As consultas retornam quatro pedidos concluídos, dois pendentes e dois cancelados, com valor total de 760,00. O exercício também compara `FILTER` com a forma equivalente baseada em `CASE`.
 
 ## Conclusão
 

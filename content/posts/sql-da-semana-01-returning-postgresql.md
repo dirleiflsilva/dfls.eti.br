@@ -1,6 +1,7 @@
 ---
 title: "SQL da Semana #01 — RETURNING: obtendo dados sem fazer uma nova consulta"
 date: 2026-07-15
+lastmod: 2026-08-20
 draft: false
 toc: true
 slug: "sql-da-semana-01-returning-postgresql"
@@ -110,6 +111,20 @@ padrão e informações calculadas pelo banco.
 Evite retornar todas as colunas sem necessidade. Em alterações de muitos
 registros, o resultado também pode ser grande; retorne somente os dados que
 serão realmente consumidos.
+
+## Pratique no laboratório
+
+O [laboratório do episódio 01](https://github.com/dirleiflsilva/sql-da-semana-postgresql/tree/main/episodios/01-returning) fornece uma tabela `jobs` com três tarefas para testar `INSERT`, `UPDATE` e `DELETE` com `RETURNING`.
+
+Depois de preparar o PostgreSQL conforme o [README do repositório](https://github.com/dirleiflsilva/sql-da-semana-postgresql), execute no `psql`:
+
+```text
+\i /sql-da-semana/01-returning/01-tabelas.sql
+\i /sql-da-semana/01-returning/02-dados.sql
+\i /sql-da-semana/01-returning/03-consultas.sql
+```
+
+O exercício mostra o identificador gerado no `INSERT`, os novos valores do `UPDATE`, a linha removida pelo `DELETE` e o estado final das tarefas.
 
 ## Referências
 

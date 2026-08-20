@@ -7,6 +7,12 @@
   {{- with .Description }}<div class="post-description">{{ . | markdownify }}</div>{{ end }}
 </header>
 
+{{- with .Content }}
+<div class="post-content">
+  {{ . }}
+</div>
+{{- end }}
+
 <ol class="series-post-list">
   {{- range .Pages.ByParam "series_order" }}
   <li class="series-post-entry">

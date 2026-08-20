@@ -1,6 +1,7 @@
 ---
 title: "SQL da Semana #04 — UPSERT: inserindo ou atualizando com segurança"
 date: 2026-08-06
+lastmod: 2026-08-20
 draft: false
 toc: true
 slug: "sql-da-semana-04-upsert-postgresql"
@@ -222,6 +223,20 @@ Um `DO UPDATE` executa uma atualização real. Isso pode acionar triggers, gerar
 - APIs que recebem uma chave idempotente.
 
 O recurso concentra a decisão no banco e elimina a separação insegura entre "consultar" e "depois gravar".
+
+## Pratique no laboratório
+
+O [laboratório do episódio 04](https://github.com/dirleiflsilva/sql-da-semana-postgresql/tree/main/episodios/04-upsert) permite observar inserção normal, `DO NOTHING`, `DO UPDATE`, valores de `EXCLUDED` e o resultado devolvido por `RETURNING`.
+
+Depois de preparar o PostgreSQL conforme o [README do repositório](https://github.com/dirleiflsilva/sql-da-semana-postgresql), execute no `psql`:
+
+```text
+\i /sql-da-semana/04-upsert/01-tabelas.sql
+\i /sql-da-semana/04-upsert/02-dados.sql
+\i /sql-da-semana/04-upsert/03-consultas.sql
+```
+
+Ao final, o laboratório mantém uma linha para cada pipeline e data de referência, demonstrando quais comandos inseriram dados, ignoraram conflitos ou atualizaram o estado existente.
 
 ## Referência
 

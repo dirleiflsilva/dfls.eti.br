@@ -1,6 +1,7 @@
 ---
 title: "SQL da Semana #03 — DISTINCT ON: obtendo o registro mais recente por grupo"
 date: 2026-07-30
+lastmod: 2026-08-20
 draft: false
 toc: true
 slug: "sql-da-semana-03-distinct-on-postgresql"
@@ -412,6 +413,20 @@ Ao usar `DISTINCT ON`, alguns problemas aparecem com frequência:
 - o evento mais recente de cada serviço.
 
 O recurso funciona melhor quando existe uma definição clara de grupo, prioridade e desempate.
+
+## Pratique no laboratório
+
+O [laboratório do episódio 03](https://github.com/dirleiflsilva/sql-da-semana-postgresql/tree/main/episodios/03-distinct-on) possui várias execuções por pipeline e empates de horário preparados para demonstrar a importância do desempate determinístico.
+
+Depois de preparar o PostgreSQL conforme o [README do repositório](https://github.com/dirleiflsilva/sql-da-semana-postgresql), execute no `psql`:
+
+```text
+\i /sql-da-semana/03-distinct-on/01-tabelas.sql
+\i /sql-da-semana/03-distinct-on/02-dados.sql
+\i /sql-da-semana/03-distinct-on/03-consultas.sql
+```
+
+O exercício compara `DISTINCT ON` com `row_number()`. As duas consultas selecionam as mesmas execuções mais recentes de `backup`, `carga-clientes` e `relatorio`.
 
 ## Conclusão
 
