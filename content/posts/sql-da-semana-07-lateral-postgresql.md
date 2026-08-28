@@ -1,6 +1,6 @@
 ---
 title: "SQL da Semana #07 — LATERAL: subconsultas para cada linha"
-date: 2026-08-27
+date: 2026-09-04
 draft: true
 toc: true
 slug: "sql-da-semana-07-lateral-postgresql"
@@ -193,4 +193,3 @@ O ponto central é o escopo: a expressão lateral consegue enxergar as colunas d
 ## Referência
 
 - [PostgreSQL: expressões de tabela e LATERAL](https://www.postgresql.org/docs/current/queries-table-expressions.html#QUERIES-LATERAL)
-
