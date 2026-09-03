@@ -1,7 +1,7 @@
 ---
 title: "Protheus Docker Lab"
 date: 2026-07-08
-lastmod: 2026-08-18
+lastmod: 2026-09-02
 draft: false
 description: "Laboratório Protheus com Docker Compose, PostgreSQL, DBAccess, AppServer e License Server para estudo de ambientes reproduzíveis."
 summary: "Projeto autoral para estudar Protheus em Docker com configuração versionada, automação operacional e práticas iniciais de DevOps."
@@ -12,6 +12,8 @@ post_links:
     url: "/posts/construindo-um-laboratorio-protheus-com-docker/"
   - label: "Post técnico (Parte 2)"
     url: "/posts/organizando-laboratorio-protheus-docker-compose/"
+  - label: "Post técnico (Parte 3)"
+    url: "/posts/automatizando-configuracao-local-protheus-docker-lab/"
 stack:
   - Protheus
   - Docker
@@ -38,13 +40,16 @@ O foco do projeto é reduzir setup manual, versionar configuração de ambiente 
 - Repositório: [protheus-docker-lab](https://github.com/dirleiflsilva/protheus-docker-lab)
 - Post técnico: [Construindo um laboratório Protheus com Docker](/posts/construindo-um-laboratorio-protheus-com-docker/)
 - Parte 2: [Organizando um laboratório Protheus: boas práticas com Docker Compose](/posts/organizando-laboratorio-protheus-docker-compose/)
+- Parte 3: [Automatizando a configuração local do Protheus Docker Lab](/posts/automatizando-configuracao-local-protheus-docker-lab/)
 
 ## Estado atual
 
 - Ambiente base validado em Docker Compose
 - Serviços `license`, `postgres-iniciado`, `dbaccess-postgres` e `appserver` documentados
 - Geração automatizada de `dbaccess.ini`, `odbc.ini` e `odbcinst.ini`
-- Script de validação para arquivos obrigatórios antes da subida
+- Setup local automatizado com preservação de arquivos de trabalho
+- Validação de arquivos, variáveis, portas e coerência entre configurações
+- Testes automatizados dos scripts com Docker simulado
 - WebApp e porta TCP do AppServer parametrizados via `.env`
 
 ## Decisões de engenharia
@@ -61,7 +66,7 @@ O roadmap editorial foi organizado em cinco partes:
 
 1. Ambiente Protheus com Docker — validado e publicado
 2. Organização do projeto e boas práticas com Docker Compose — validado
-3. Automação e configuração local — planejado
+3. Automação e configuração local — validado
 4. Dados e manutenção do ambiente — planejado
 5. Validação DevOps e limites do laboratório — planejado
 
