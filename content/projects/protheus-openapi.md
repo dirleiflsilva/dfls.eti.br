@@ -1,12 +1,17 @@
 ---
 title: "Protheus OpenAPI"
 date: 2026-08-26
-lastmod: 2026-08-26
+lastmod: 2026-09-09
 draft: false
 description: "Gerador experimental de documentação OpenAPI para APIs REST desenvolvidas em TL++ e AdvPL no TOTVS Protheus."
 summary: "Projeto autoral para aprender TL++ construindo uma ferramenta real de documentação para diferentes gerações de APIs REST Protheus."
 project_status: "active"
 repo_url: "https://github.com/dirleiflsilva/protheus-openapi"
+post_links:
+  - label: "Post técnico (Parte 1)"
+    url: "/posts/protheus-openapi-jornada-tlpp-documentar-apis-rest/"
+  - label: "Post técnico (Parte 2)"
+    url: "/posts/hello-world-rest-tlpp-annotations-rest-doc/"
 stack:
   - Protheus
   - TL++
@@ -30,6 +35,9 @@ O projeto combina uma necessidade real de documentação com uma jornada públic
 ## Links
 
 - Repositório: [protheus-openapi](https://github.com/dirleiflsilva/protheus-openapi)
+- Parte 1: [Protheus OpenAPI: uma jornada de TL++ para documentar APIs REST](/posts/protheus-openapi-jornada-tlpp-documentar-apis-rest/)
+- Parte 2: [Hello World REST em TL++: annotations e geração nativa com REST-DOC](/posts/hello-world-rest-tlpp-annotations-rest-doc/)
+- Série: [Protheus OpenAPI](/series/protheus-openapi/)
 
 ## Estado atual
 
