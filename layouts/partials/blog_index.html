@@ -63,7 +63,7 @@
 
 {{- if $showIntro }}
   {{- $projects := where site.RegularPages "Section" "projects" -}}
-  {{- $projects = $projects.ByDate.Reverse -}}
+  {{- $projects = $projects.ByWeight -}}
   {{- with $projects }}
 <section class="blog-index-section home-projects" aria-labelledby="home-projects-title">
   <div class="blog-section-heading">

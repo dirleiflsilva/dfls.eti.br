@@ -1,6 +1,7 @@
 ---
 title: "Protheus Docker Lab"
 date: 2026-07-08
+weight: 30
 lastmod: 2026-09-16
 draft: false
 description: "Laboratório Protheus com Docker Compose, PostgreSQL, DBAccess, AppServer e License Server para estudo de ambientes reproduzíveis."

@@ -1,6 +1,7 @@
 ---
 title: "PostgreSQL Reliability Lab"
 date: 2026-04-26
+weight: 10
 lastmod: 2026-09-14
 draft: false
 description: "Laboratório prático de confiabilidade em PostgreSQL, com Docker, backup, restore, PITR e replicação física por streaming."

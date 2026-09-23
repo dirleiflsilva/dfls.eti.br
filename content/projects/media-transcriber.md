@@ -1,6 +1,7 @@
 ---
 title: "Media Transcriber"
 date: 2026-07-20
+weight: 20
 draft: false
 description: "Aplicação de processamento e transcrição de mídia construída incrementalmente como laboratório prático de Engenharia de Software com Python."
 summary: "Projeto autoral para explorar testes, arquitetura, CI/CD e evolução incremental por meio de uma aplicação Python de transcrição de mídia."

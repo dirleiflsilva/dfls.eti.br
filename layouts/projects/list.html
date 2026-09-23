@@ -18,7 +18,7 @@
 </div>
 {{- end }}
 
-{{- $paginator := .Paginate .RegularPages }}
+{{- $paginator := .Paginate .RegularPages.ByWeight }}
 {{- if gt (len $paginator.Pages) 0 }}
 <section class="projects-grid" aria-label="Lista de projetos">
   {{- range $paginator.Pages }}

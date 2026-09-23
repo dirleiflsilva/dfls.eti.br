@@ -1,6 +1,7 @@
 ---
 title: "Protheus OpenAPI"
 date: 2026-08-26
+weight: 40
 lastmod: 2026-09-09
 draft: false
 description: "Gerador experimental de documentação OpenAPI para APIs REST desenvolvidas em TL++ e AdvPL no TOTVS Protheus."
