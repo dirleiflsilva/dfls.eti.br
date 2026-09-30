@@ -26,7 +26,7 @@
     <header class="project-card-header">
       <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
       {{- with .Params.project_status }}
-      <span class="project-status status-{{ . | urlize }}">{{ . }}</span>
+      <span class="project-status status-{{ . | urlize }}">{{ if eq . "active" }}Em andamento{{ else if eq . "completed" }}Concluído{{ else }}{{ . }}{{ end }}</span>
       {{- end }}
     </header>
 

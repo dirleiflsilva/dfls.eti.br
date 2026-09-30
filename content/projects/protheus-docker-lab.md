@@ -2,11 +2,11 @@
 title: "Protheus Docker Lab"
 date: 2026-07-08
 weight: 30
-lastmod: 2026-09-16
+lastmod: 2026-09-30
 draft: false
 description: "Laboratório Protheus com Docker Compose, PostgreSQL, DBAccess, AppServer e License Server para estudo de ambientes reproduzíveis."
 summary: "Projeto autoral para estudar Protheus em Docker com configuração versionada, automação operacional e práticas iniciais de DevOps."
-project_status: "active"
+project_status: "completed"
 repo_url: "https://github.com/dirleiflsilva/protheus-docker-lab"
 post_links:
   - label: "Post técnico (Parte 1)"
@@ -17,6 +17,8 @@ post_links:
     url: "/posts/automatizando-configuracao-local-protheus-docker-lab/"
   - label: "Post técnico (Parte 4)"
     url: "/posts/dados-manutencao-protheus-docker-lab/"
+  - label: "Post técnico (Parte 5)"
+    url: "/posts/validacao-devops-limites-protheus-docker-lab/"
 stack:
   - Protheus
   - Docker
@@ -29,6 +31,7 @@ highlights:
   - "DBAccess e ODBC gerados por script para evitar configuração manual frágil"
   - "Validação operacional antes da subida do laboratório"
   - "Backup do PostgreSQL e restauração validada em banco separado"
+  - "Integração contínua para validar o Compose, a sintaxe Bash e os testes dos scripts"
 tags: ["protheus", "docker", "devops", "postgresql", "labs"]
 categories: ["Projetos & Labs"]
 ---
@@ -46,7 +49,9 @@ O foco do projeto é reduzir setup manual, versionar configuração de ambiente 
 - Parte 2: [Organizando um laboratório Protheus: boas práticas com Docker Compose](/posts/organizando-laboratorio-protheus-docker-compose/)
 - Parte 3: [Automatizando a configuração local do Protheus Docker Lab](/posts/automatizando-configuracao-local-protheus-docker-lab/)
 - Parte 4: [Dados e manutenção no Protheus Docker Lab](/posts/dados-manutencao-protheus-docker-lab/)
+- Parte 5: [Validação DevOps e limites do Protheus Docker Lab](/posts/validacao-devops-limites-protheus-docker-lab/)
 - [Procedimentos de dados e manutenção do laboratório](https://github.com/dirleiflsilva/protheus-docker-lab/tree/main/docs/parte-4)
+- [Validação DevOps e limites do laboratório](https://github.com/dirleiflsilva/protheus-docker-lab/tree/main/docs/parte-5)
 
 ## Estado atual
 
@@ -60,6 +65,7 @@ O foco do projeto é reduzir setup manual, versionar configuração de ambiente 
 - Inventário de persistência e rotina de manutenção documentados
 - Backup do PostgreSQL em formato custom e restauração validada em banco separado, sem substituir a origem
 - Pausa e retomada com preservação dos contêineres e suas montagens
+- Workflow de CI aprovado para validar o Compose com `.env.example`, a sintaxe Bash e os 12 cenários com Docker simulado
 
 ## Decisões de engenharia
 
@@ -69,9 +75,9 @@ O foco do projeto é reduzir setup manual, versionar configuração de ambiente 
 - Usar healthcheck no PostgreSQL antes da inicialização do DBAccess
 - Usar `stop`/`start` no dia a dia para preservar o contêiner do PostgreSQL e seu volume anônimo; a migração para volume nomeado permanece fora desta etapa
 - Tratar o dump como backup do banco, complementado por cópias dos arquivos locais necessários ao ambiente
-- Manter o primeiro lab com escopo controlado, sem REST, CI/CD ou observabilidade
+- Manter o primeiro lab com escopo controlado, sem REST, deploy automático ou observabilidade centralizada
 
-## Próximas fases
+## Encerramento
 
 O roadmap editorial foi organizado em cinco partes:
 
@@ -79,6 +85,8 @@ O roadmap editorial foi organizado em cinco partes:
 2. Organização do projeto e boas práticas com Docker Compose — validado
 3. Automação e configuração local — validado
 4. Dados e manutenção do ambiente — validado: backup e restauração em banco separado
-5. Validação DevOps e limites do laboratório — planejado
+5. Validação DevOps e limites do laboratório — validado: integração contínua para os artefatos versionáveis e limites documentados
 
-Serviços REST, observabilidade centralizada, pipelines corporativos e integração com fontes AdvPL/TL++ ficam reservados para laboratórios futuros, mantendo este primeiro ambiente simples e estável.
+Com as cinco partes concluídas, o laboratório cumpriu seu objetivo de estudar um ambiente Protheus reproduzível, sua operação e os limites das validações automatizadas.
+
+O projeto está encerrado neste escopo. Evoluções como serviços REST, observabilidade centralizada, pipelines corporativos e integração com fontes AdvPL/TL++ são tecnicamente possíveis, mas não fazem parte deste lab e não justificam ampliar sua complexidade. Esses temas podem ser tratados em laboratórios futuros quando houver um objetivo de aprendizado próprio.

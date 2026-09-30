@@ -1015,6 +1015,15 @@ body.home #theme-toggle {
   color: var(--brand-accent);
 }
 
+.status-completed {
+  border-color: color-mix(in srgb, #2f855a 55%, var(--border));
+  color: #2f855a;
+}
+
+[data-theme="dark"] .status-completed {
+  color: #68d391;
+}
+
 .project-card-summary {
   margin: 10px 0;
   color: var(--content);

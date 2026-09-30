@@ -63,6 +63,7 @@
 
 {{- if $showIntro }}
   {{- $projects := where site.RegularPages "Section" "projects" -}}
+  {{- $projects = where $projects "Params.project_status" "active" -}}
   {{- $projects = $projects.ByWeight -}}
   {{- with $projects }}
 <section class="blog-index-section home-projects" aria-labelledby="home-projects-title">
@@ -79,7 +80,7 @@
       <header>
         <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
         {{- with .Params.project_status }}
-        <span class="project-status status-{{ . | urlize }}">{{ if eq . "active" }}Em andamento{{ else }}{{ . }}{{ end }}</span>
+        <span class="project-status status-{{ . | urlize }}">{{ if eq . "active" }}Em andamento{{ else if eq . "completed" }}Concluído{{ else }}{{ . }}{{ end }}</span>
         {{- end }}
       </header>
       {{- $summary := .Params.summary | default .Description -}}
