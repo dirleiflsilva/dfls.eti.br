@@ -2,10 +2,10 @@
 title: "PostgreSQL Reliability Lab"
 date: 2026-04-26
 weight: 10
-lastmod: 2026-09-14
+lastmod: 2026-10-05
 draft: false
-description: "Laboratório prático de confiabilidade em PostgreSQL, com Docker, backup, restore, PITR e replicação física por streaming."
-summary: "Projeto autoral de DBRE com PostgreSQL: ambiente reproduzível, recuperação de dados testada e replicação assíncrona validada."
+description: "Laboratório prático de confiabilidade em PostgreSQL, com Docker, backup, restore, PITR, replicação física e failover automático."
+summary: "Projeto autoral de DBRE com PostgreSQL: ambiente reproduzível, recuperação de dados, replicação assíncrona e failover validados."
 project_status: "active"
 repo_url: "https://github.com/dirleiflsilva/postgresql-reliability-lab"
 post_links:
@@ -17,18 +17,24 @@ post_links:
     url: "/posts/postgresql-reliability-lab-lab-03-backup-restore-pitr/"
   - label: "Post técnico (Lab 04)"
     url: "/posts/postgresql-reliability-lab-lab-04-streaming-replication/"
+  - label: "Post técnico (Lab 05)"
+    url: "/posts/postgresql-reliability-lab-lab-05-failover-automatico/"
 stack:
   - PostgreSQL
   - Docker
   - Docker Compose
   - Bash
   - SQL
+  - Patroni
+  - etcd
+  - HAProxy
 highlights:
   - "Base reproduzível com Docker Compose, persistência e healthcheck"
   - "Roles, schemas e privilégios separados por responsabilidade"
   - "Backups lógico e físico restaurados em ambientes isolados"
   - "WAL archiving e PITR validados com simulação de incidente"
   - "Replicação assíncrona com leitura em standby e teste de reconexão"
+  - "Failover automático com Patroni, etcd e HAProxy"
 tags: ["postgresql", "dbre", "reliability", "labs", "devops"]
 categories: ["Projetos & Labs"]
 ---
@@ -37,7 +43,7 @@ categories: ["Projetos & Labs"]
 
 Criar e evoluir um laboratório prático de confiabilidade para PostgreSQL, com foco em operação, padronização e testes de cenários reais.
 
-Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database Initialization)**, o **Lab 03 (Backup & Restore)** e o **Lab 04 (Streaming Replication)**. O projeto cobre a criação do ambiente, backup, restore, recuperação point-in-time e replicação física assíncrona, com validação da propagação de escritas e da retomada após uma interrupção da réplica.
+Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database Initialization)**, o **Lab 03 (Backup & Restore)**, o **Lab 04 (Streaming Replication)** e o **Lab 05 (Automatic Failover)**. O projeto cobre a criação do ambiente, backup, restore, recuperação point-in-time, replicação física assíncrona e failover automático, incluindo a reintegração do antigo líder como réplica.
 
 ## Links
 
@@ -48,6 +54,8 @@ Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database I
 - Implementação (Lab 03): [Backup lógico, backup físico, WAL archiving e PITR](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/main/labs/03-backup-restore)
 - Deep dive técnico (Lab 04): [Streaming Replication no PostgreSQL](/posts/postgresql-reliability-lab-lab-04-streaming-replication/)
 - Implementação (Lab 04): [Replicação física assíncrona e teste de reconexão](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/main/labs/04-replication)
+- Deep dive técnico (Lab 05): [Failover automático com Patroni, etcd e HAProxy](/posts/postgresql-reliability-lab-lab-05-failover-automatico/)
+- Implementação (Lab 05): [Failover automático e reintegração do antigo líder](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/488cc77/labs/05-failover)
 
 ## Estado atual
 
@@ -63,8 +71,9 @@ Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database I
 - Réplica física por streaming com slot de replicação e leitura em hot standby
 - Propagação de escritas e rejeição de escrita na réplica verificadas
 - Retomada da replicação após interrupção validada, com acompanhamento de WAL
+- Failover automático com retomada da escrita pelo mesmo endpoint
+- Reintegração do antigo líder como réplica por meio de `pg_rewind`
 
 ## Próximas fases
 
-- Lab 05: alta disponibilidade e failover automático
 - Labs seguintes: observabilidade, performance e pipeline de dados
