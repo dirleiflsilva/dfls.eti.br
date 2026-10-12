@@ -10,6 +10,8 @@ repo_url: "https://gitlab.com/dirleiflsilva/media-transcriber"
 post_links:
   - label: "Post de apresentação"
     url: "/posts/media-transcriber-laboratorio-engenharia-software-python/"
+  - label: "Fundação do projeto Python"
+    url: "/posts/fundacao-projeto-python-qualidade-ci/"
 stack:
   - Python
   - pytest
@@ -34,18 +36,19 @@ O projeto deverá evoluir em etapas. Tecnologias, padrões e abstrações serão
 
 - Repositório: [media-transcriber](https://gitlab.com/dirleiflsilva/media-transcriber)
 - Post de apresentação: [De uma ideia abandonada a um laboratório de Engenharia de Software com Python](/posts/media-transcriber-laboratorio-engenharia-software-python/)
+- Fundação do projeto: [Como estruturei um projeto Python com qualidade e CI](/posts/fundacao-projeto-python-qualidade-ci/)
 
 ## Estado atual
 
-- Repositório público criado no GitLab
-- Objetivos e escopo inicial documentados
-- Roadmap organizado da fundação à primeira versão self-hosted
-- Milestone `v0.1.0 — Project Foundation` em desenvolvimento
+- Fundação do projeto concluída e registrada na versão `v0.1.0`
+- Primeira CLI de entrada e validação de arquivos disponível na versão `v0.2.0`
+- Testes, cobertura, linting, formatação e análise estática integrados ao fluxo de desenvolvimento
+- Pipeline de integração contínua configurada no GitLab
 - Funcionalidades de processamento e transcrição ainda não implementadas
 
 ## Primeira etapa
 
-A versão `v0.1.0` estabelecerá a fundação do projeto:
+A versão `v0.1.0` estabeleceu a fundação do projeto:
 
 - estrutura moderna de projeto Python
 - gerenciamento de dependências
