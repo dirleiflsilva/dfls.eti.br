@@ -12,6 +12,8 @@ post_links:
     url: "/posts/media-transcriber-laboratorio-engenharia-software-python/"
   - label: "Fundação do projeto Python"
     url: "/posts/fundacao-projeto-python-qualidade-ci/"
+  - label: "Primeira CLI com testes"
+    url: "/posts/cli-python-testes-media-transcriber/"
 stack:
   - Python
   - pytest
@@ -37,6 +39,7 @@ O projeto deverá evoluir em etapas. Tecnologias, padrões e abstrações serão
 - Repositório: [media-transcriber](https://gitlab.com/dirleiflsilva/media-transcriber)
 - Post de apresentação: [De uma ideia abandonada a um laboratório de Engenharia de Software com Python](/posts/media-transcriber-laboratorio-engenharia-software-python/)
 - Fundação do projeto: [Como estruturei um projeto Python com qualidade e CI](/posts/fundacao-projeto-python-qualidade-ci/)
+- Primeira CLI: [CLI em Python com testes: a primeira funcionalidade do Media Transcriber](/posts/cli-python-testes-media-transcriber/)
 
 ## Estado atual
 
