@@ -2,10 +2,10 @@
 title: "PostgreSQL Reliability Lab"
 date: 2026-04-26
 weight: 10
-lastmod: 2026-10-19
+lastmod: 2026-11-02
 draft: false
-description: "Laboratório prático de confiabilidade em PostgreSQL, com Docker, recuperação, alta disponibilidade e observabilidade validada."
-summary: "Projeto autoral de DBRE com PostgreSQL: ambiente reproduzível, recuperação, alta disponibilidade, métricas, logs e alertas validados."
+description: "Laboratório prático de confiabilidade em PostgreSQL, com Docker, recuperação, alta disponibilidade, observabilidade e investigação de performance."
+summary: "Projeto autoral de DBRE com PostgreSQL: ambiente reproduzível, recuperação, alta disponibilidade, observabilidade e consultas comparadas com evidências de antes e depois."
 project_status: "active"
 repo_url: "https://github.com/dirleiflsilva/postgresql-reliability-lab"
 post_links:
@@ -21,12 +21,16 @@ post_links:
     url: "/posts/postgresql-reliability-lab-lab-05-failover-automatico/"
   - label: "Post técnico (Lab 06)"
     url: "/posts/postgresql-reliability-lab-lab-06-observabilidade/"
+  - label: "Post técnico (Lab 07)"
+    url: "/posts/postgresql-reliability-lab-lab-07-performance/"
 stack:
   - PostgreSQL
   - Docker
   - Docker Compose
   - Bash
   - SQL
+  - Python
+  - pgbench
   - Patroni
   - etcd
   - HAProxy
@@ -41,6 +45,7 @@ highlights:
   - "Replicação assíncrona com leitura em standby e teste de reconexão"
   - "Failover automático com Patroni, etcd e HAProxy"
   - "Métricas, logs estruturados, dashboard e regras de alerta validados ponta a ponta"
+  - "Consultas e índices comparados com EXPLAIN, pg_stat_statements e pgbench"
 tags: ["postgresql", "dbre", "reliability", "labs", "devops"]
 categories: ["Projetos & Labs"]
 ---
@@ -49,7 +54,7 @@ categories: ["Projetos & Labs"]
 
 Criar e evoluir um laboratório prático de confiabilidade para PostgreSQL, com foco em operação, padronização e testes de cenários reais.
 
-Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database Initialization)**, o **Lab 03 (Backup & Restore)**, o **Lab 04 (Streaming Replication)**, o **Lab 05 (Automatic Failover)** e o **Lab 06 (Observability)**. O projeto cobre a criação do ambiente, recuperação point-in-time, replicação física, failover automático e observabilidade com métricas e logs estruturados.
+Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database Initialization)**, o **Lab 03 (Backup & Restore)**, o **Lab 04 (Streaming Replication)**, o **Lab 05 (Automatic Failover)**, o **Lab 06 (Observability)** e o **Lab 07 (Performance)**. O projeto cobre a criação do ambiente, recuperação point-in-time, replicação física, failover automático, observabilidade com métricas e logs estruturados e investigação de consultas com evidências de antes e depois.
 
 ## Links
 
@@ -64,6 +69,8 @@ Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database I
 - Implementação (Lab 05): [Failover automático e reintegração do antigo líder](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/488cc77/labs/05-failover)
 - Deep dive técnico (Lab 06): [Observabilidade com Prometheus, Grafana e Loki](/posts/postgresql-reliability-lab-lab-06-observabilidade/)
 - Implementação (Lab 06): [Métricas, logs, dashboards e regras de alerta](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/594ed7b/labs/06-observability)
+- Deep dive técnico (Lab 07): [Investigando performance no PostgreSQL](/posts/postgresql-reliability-lab-lab-07-performance/)
+- Implementação (Lab 07): [Consultas, índices e otimização com evidências de antes e depois](https://github.com/dirleiflsilva/postgresql-reliability-lab/tree/375db8a/labs/07-performance)
 
 ## Estado atual
 
@@ -85,7 +92,11 @@ Os posts vinculados apresentam o **Lab 01 (Foundation)**, o **Lab 02 (Database I
 - Logs JSON do PostgreSQL ingeridos e consultados no Loki
 - Dashboard do Grafana e regras de alerta provisionados automaticamente
 - Caminho de telemetria validado ponta a ponta com evidência identificável
+- Lab de performance validado com 10.000 clientes e 100.000 pedidos reproduzíveis
+- Equivalência dos resultados verificada entre consultas e fases do benchmark
+- Filtro diário e índice parcial com redução do trabalho observado; índice de histórico sem ganho relevante na carga testada
+- Custos de escrita, armazenamento e WAL registrados em comparação exploratória
 
 ## Próximas fases
 
-- Labs seguintes: performance e pipeline de dados
+- Lab seguinte: pipeline de dados
