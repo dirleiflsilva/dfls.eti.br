@@ -2,6 +2,7 @@
 
 :root {
   --brand-accent: #199052;
+  --mermaid-line: #365548;
   --hero-bg: linear-gradient(135deg, #1f9d60 0%, #14653f 100%);
   --hero-ink: #ffffff;
   --hero-muted: rgba(255, 255, 255, 0.82);
@@ -14,6 +15,7 @@
 
 :root[data-theme="dark"] {
   --brand-accent: #3ac27f;
+  --mermaid-line: #b0dbc3;
   --hero-bg: linear-gradient(135deg, #15261d 0%, #0d1712 100%);
   --hero-ink: #f3fff8;
   --hero-muted: rgba(243, 255, 248, 0.8);
@@ -932,6 +934,16 @@
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+.post-single .post-content pre.mermaid svg .flowchart-link {
+  stroke: var(--mermaid-line) !important;
+  stroke-width: 2px !important;
+}
+
+.post-single .post-content pre.mermaid svg marker path {
+  fill: var(--mermaid-line) !important;
+  stroke: var(--mermaid-line) !important;
 }
 
 body.home {
