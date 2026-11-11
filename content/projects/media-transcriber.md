@@ -4,7 +4,7 @@ date: 2026-07-20
 weight: 20
 draft: false
 description: "Aplicação de processamento e transcrição de mídia construída incrementalmente como laboratório prático de Engenharia de Software com Python."
-summary: "Projeto autoral para explorar testes, arquitetura, CI/CD e evolução incremental por meio de uma aplicação Python de transcrição de mídia."
+summary: "Laboratório de Engenharia de Software com Python: CLI, conversão de áudio com FFmpeg e testes automatizados, evoluindo até a transcrição de mídia."
 project_status: "active"
 repo_url: "https://gitlab.com/dirleiflsilva/media-transcriber"
 post_links:
@@ -14,6 +14,8 @@ post_links:
     url: "/posts/fundacao-projeto-python-qualidade-ci/"
   - label: "Primeira CLI com testes"
     url: "/posts/cli-python-testes-media-transcriber/"
+  - label: "Integração testável com FFmpeg"
+    url: "/posts/integrando-ffmpeg-forma-testavel-media-transcriber/"
 stack:
   - Python
   - pytest
@@ -22,7 +24,7 @@ stack:
   - FFmpeg
 highlights:
   - "Evolução incremental guiada por problemas reais"
-  - "Fundação planejada com qualidade automatizada"
+  - "Conversão com FFmpeg e testes unitários e de integração"
   - "Roadmap de CLI a uma aplicação self-hosted"
 tags: ["python", "engenharia de software", "testes", "ci-cd", "labs"]
 categories: ["Projetos & Labs"]
@@ -40,14 +42,16 @@ O projeto deverá evoluir em etapas. Tecnologias, padrões e abstrações serão
 - Post de apresentação: [De uma ideia abandonada a um laboratório de Engenharia de Software com Python](/posts/media-transcriber-laboratorio-engenharia-software-python/)
 - Fundação do projeto: [Como estruturei um projeto Python com qualidade e CI](/posts/fundacao-projeto-python-qualidade-ci/)
 - Primeira CLI: [CLI em Python com testes: a primeira funcionalidade do Media Transcriber](/posts/cli-python-testes-media-transcriber/)
+- Integração com FFmpeg: [Integrando FFmpeg de forma testável no Media Transcriber](/posts/integrando-ffmpeg-forma-testavel-media-transcriber/)
 
 ## Estado atual
 
 - Fundação do projeto concluída e registrada na versão `v0.1.0`
 - Primeira CLI de entrada e validação de arquivos disponível na versão `v0.2.0`
+- Conversão de áudio e vídeo para WAV PCM de 16 bits, mono e 16 kHz disponível na versão `v0.3.0`, com proteção do destino e testes de integração com FFmpeg
 - Testes, cobertura, linting, formatação e análise estática integrados ao fluxo de desenvolvimento
 - Pipeline de integração contínua configurada no GitLab
-- Funcionalidades de processamento e transcrição ainda não implementadas
+- A série já cobre o processamento de áudio; a integração com transcrição será abordada no próximo incremento
 
 ## Primeira etapa
 
