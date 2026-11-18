@@ -2,7 +2,7 @@
 title: "Protheus OpenAPI"
 date: 2026-08-26
 weight: 40
-lastmod: 2026-11-04
+lastmod: 2026-11-18
 draft: false
 description: "Gerador experimental de documentação OpenAPI para APIs REST desenvolvidas em TL++ e AdvPL no TOTVS Protheus."
 summary: "Biblioteca experimental em TL++ com descoberta, modelo OpenAPI e serialização separados; núcleo manual mínimo validado em JSON."
@@ -19,6 +19,8 @@ post_links:
     url: "/posts/yaml-invalido-encoding-normalizacao-protheus-openapi/"
   - label: "Post técnico (Parte 5)"
     url: "/posts/por-que-criar-modelo-openapi-independente/"
+  - label: "Post técnico (Parte 6)"
+    url: "/posts/tdd-probat-aprendizados-tlpp/"
 stack:
   - Protheus
   - TL++
@@ -47,6 +49,7 @@ O projeto combina uma necessidade real de documentação com uma jornada públic
 - Parte 3: [TL++ versus WSRESTFUL: o que o gerador OpenAPI consegue descobrir](/posts/tlpp-versus-wsrestful-descoberta-openapi/)
 - Parte 4: [YAML inválido, encoding e normalização segura no Protheus OpenAPI](/posts/yaml-invalido-encoding-normalizacao-protheus-openapi/)
 - Parte 5: [Por que criar um modelo OpenAPI independente](/posts/por-que-criar-modelo-openapi-independente/)
+- Parte 6: [TDD com PROBAT e aprendizados de TL++](/posts/tdd-probat-aprendizados-tlpp/)
 - Série: [Protheus OpenAPI](/series/protheus-openapi/)
 
 ## Estado atual
@@ -58,11 +61,11 @@ O projeto combina uma necessidade real de documentação com uma jornada públic
 - Núcleo manual mínimo com seis classes TL++, rejeição de conflitos e validação acumulada
 - Documento JSON do Hello World gerado sem `tlpp.doc.generate()`, com evidências de testes PROBAT e chamadas HTTP
 
-Este resumo acompanha a etapa abordada no artigo de 4 de novembro de 2026. O repositório pode conter incrementos posteriores ainda não apresentados nos artigos.
+Este resumo acompanha o núcleo mínimo e o processo de testes abordados nos artigos de 4 e 18 de novembro de 2026. O repositório pode conter incrementos posteriores ainda não apresentados nos artigos.
 
 ## Próximas etapas
 
-- Detalhar o desenvolvimento do núcleo com PROBAT e os ciclos RED/GREEN
+- Detalhar a composição entre documento, paths, operações e respostas
 - Conectar esse modelo a adaptadores para endpoints TL++ e serviços AdvPL baseados em `WSRESTFUL`
 - Acrescentar geração YAML à saída JSON já validada
 - Acrescentar schemas, exemplos, respostas, segurança e extensões `x-totvs`
